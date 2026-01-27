@@ -1,7 +1,53 @@
-# 忽略文件
-.DS_Store
-*.log
-.env
-__pycache__/
+# 依赖
 node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 编译输出
+dist/
+build/
+*.js.map
+*.d.ts
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 临时文件
+tmp/
+temp/
 *.tmp
+
+# 存储数据
+scripts/storage/*.json
+!scripts/storage/.gitkeep
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 其他
+.cache/
+.parcel-cache/

@@ -1,13 +1,87 @@
 # AutoPilot 定时任务配置示例
-# 每日任务
-0 8 * * * autopilot/scripts/daily/jd_signin.py
-0 9 * * * autopilot/scripts/daily/bilibili_signin.py
+# 格式：分 时 日 月 周 命令
+#
+# 使用说明：
+# 1. 将需要的定时任务复制到青龙面板的定时任务中
+# 2. 根据实际需求调整执行时间
+# 3. 建议错峰执行，避免同时运行过多任务
+# 4. 部分脚本可能需要配置环境变量，请参考 configs/env.example
 
-# 系统监控（每5分钟）
-*/5 * * * * autopilot/scripts/system/health_check.sh
+# ============================================
+# 签到类脚本
+# ============================================
 
-# 数据报表（每周一早上）
-0 8 * * 1 autopilot/scripts/data/weekly_report.py
+# 京东签到（每天 7:30）
+30 7 * * * cd /ql/scripts/autopilot && node scripts/checkin/jd_signin.js
 
-# 实验室脚本（谨慎使用）
-# 0 12 * * * autopilot/scripts/_labs/experimental_feature.py
+# 阿里云盘签到（每天 8:00）
+0 8 * * * cd /ql/scripts/autopilot && node scripts/checkin/aliyunpan_signin.js
+
+# 喜马拉雅签到（每天 8:30）
+30 8 * * * cd /ql/scripts/autopilot && node scripts/checkin/xmly_signin.js
+
+# 云闪付签到（每天 9:00）
+0 9 * * * cd /ql/scripts/autopilot && node scripts/checkin/ysfqd_signin.js
+
+# ikuuu 机场签到（每天 6:00）
+0 6 * * * cd /ql/scripts/autopilot && node scripts/checkin/ikuuu_signin.js
+
+# ssone 机场签到（每天 6:30）
+30 6 * * * cd /ql/scripts/autopilot && node scripts/checkin/ssone_signin.js
+
+# AICNN 签到（每天 7:00）
+0 7 * * * cd /ql/scripts/autopilot && node scripts/checkin/aicnn_signin.js
+
+# yourapi 签到（每天 8:00）
+0 8 * * * cd /ql/scripts/autopilot && node scripts/checkin/yourapi_signin.js
+
+# NewAPI 通用签到（每天 9:00）
+0 9 * * * cd /ql/scripts/autopilot && node scripts/checkin/newapi_signin.js
+
+# ============================================
+# 信息推送类脚本
+# ============================================
+
+# 60s 早报（每天 8:00）
+0 8 * * * cd /ql/scripts/autopilot && node scripts/info/60s_news.js
+
+# 天气预报（每天 8:00）
+0 8 * * * cd /ql/scripts/autopilot && node scripts/info/weather.js
+
+# ============================================
+# 工具类脚本
+# ============================================
+
+# 禁用重复脚本（每周一 0:00）
+0 0 * * 1 cd /ql/scripts/autopilot && node scripts/tools/disable_duplicate.js
+
+# 阿里云盘小雅挂载清理（每天 4:00）
+0 4 * * * cd /ql/scripts/autopilot && node scripts/tools/alipan_clean.js
+
+# 系统健康检查（每 5 分钟）
+*/5 * * * * cd /ql/scripts/autopilot && bash scripts/tools/health_check.sh
+
+# ============================================
+# 注意事项
+# ============================================
+#
+# 1. 执行时间建议：
+#    - 签到类脚本：建议在早上 6:00-9:00 之间执行
+#    - 信息推送类脚本：建议在早上 8:00 左右执行
+#    - 工具类脚本：根据实际需求设置
+#
+# 2. 错峰执行：
+#    - 避免所有任务在同一时间执行
+#    - 建议每隔 30 分钟执行一个任务
+#
+# 3. 路径说明：
+#    - /ql/scripts/autopilot 是默认的脚本安装目录
+#    - 如果安装在其他位置，请相应修改路径
+#
+# 4. 环境变量：
+#    - 部分脚本需要配置环境变量才能正常运行
+#    - 请参考 configs/env.example 文件进行配置
+#
+# 5. 日志查看：
+#    - 可以在青龙面板的日志中查看执行结果
+#    - 也可以通过通知渠道接收执行结果
