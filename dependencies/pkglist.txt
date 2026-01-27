@@ -1,0 +1,6 @@
+# 系统包依赖
+curl
+wget
+jq
+git
+procps

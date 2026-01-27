@@ -1,0 +1,13 @@
+# AutoPilot 定时任务配置示例
+# 每日任务
+0 8 * * * autopilot/scripts/daily/jd_signin.py
+0 9 * * * autopilot/scripts/daily/bilibili_signin.py
+
+# 系统监控（每5分钟）
+*/5 * * * * autopilot/scripts/system/health_check.sh
+
+# 数据报表（每周一早上）
+0 8 * * 1 autopilot/scripts/data/weekly_report.py
+
+# 实验室脚本（谨慎使用）
+# 0 12 * * * autopilot/scripts/_labs/experimental_feature.py

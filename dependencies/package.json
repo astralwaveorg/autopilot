@@ -1,0 +1,10 @@
+{
+  "name": "autopilot",
+  "version": "1.0.0",
+  "description": "AutoPilot脚本依赖",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "crypto-js": "^4.1.1",
+    "node-schedule": "^2.1.1"
+  }
+}

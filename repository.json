@@ -1,0 +1,9 @@
+{
+  "name": "autopilot",
+  "author": "你的名字",
+  "repo": "https://github.com/yourname/autopilot",
+  "version": "1.0.0",
+  "description": "简洁强大的青龙面板脚本库 - 让自动化成为自动驾驶仪",
+  "type": "scripts",
+  "license": "MIT"
+}
