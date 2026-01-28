@@ -1,41 +1,53 @@
 /**
- * 潮新闻自动签到脚本
- * * @Author: Astral
+ * 潮新闻签到
+ * cron: 0 9 * * *
+ * @Author: Astral
  * @Date: 2026-01-28
  * @Version: 1.0.0
- * * 环境变量：
- * CHAOXINWEN_COOKIE: 潮新闻Cookie，多账号支持分隔符：@ 或 换行 或 &
- * * 示例：
- * CHAOXINWEN_COOKIE="cookie1@cookie2"
+ * 环境变量: CHAOXINWEN_COOKIE (潮新闻Cookie，多账号使用 @ 或 & 或 换行 分割)
  */
 
 const axios = require('axios');
 
-const Env = {
+// 模拟 AutoPilot 环境类
+const $ = {
   name: '潮新闻签到',
-  variable: 'CHAOXINWEN_COOKIE',
-  splitters: ['@', '\n', '&'],
+  env_name: 'CHAOXINWEN_COOKIE',
 
-  log(msg, level = 'info') {
-    const timestamp = new Date().toLocaleString();
-    console.log(`[${timestamp}] [${level.toUpperCase()}] ${msg}`);
+  log(msg, level = 'INFO') {
+    console.log(`[${level}] ${msg}`);
   },
 
-  getCookies() {
-    const raw = process.env[this.variable] || '';
-    if (!raw) return [];
-    let splitChar = this.splitters.find((s) => raw.includes(s)) || this.splitters[0];
-    return raw.split(splitChar).filter((item) => item.trim() !== '');
+  get_envs() {
+    let env_str = process.env[this.env_name] || '';
+    if (!env_str) return [];
+
+    // 适配分割符 ['@', '\n', '&']
+    let accounts = [];
+    if (env_str.includes('@')) {
+      accounts = env_str.split('@');
+    } else if (env_str.includes('&')) {
+      accounts = env_str.split('&');
+    } else if (env_str.includes('\n')) {
+      accounts = env_str.split('\n');
+    } else {
+      accounts = [env_str];
+    }
+    return accounts.map((item) => item.trim()).filter((item) => item !== '');
+  },
+
+  wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   },
 };
 
-class Chaoxinwen {
+class Task {
   constructor(cookie, index) {
-    this.cookie = cookie.trim();
+    this.cookie = cookie;
     this.index = index + 1;
     this.client = axios.create({
       baseURL: 'https://www.chaoxinwen.com/api',
-      timeout: 10000,
+      timeout: 15000,
       headers: {
         Cookie: this.cookie,
         'Content-Type': 'application/json',
@@ -48,54 +60,45 @@ class Chaoxinwen {
   async signIn() {
     try {
       const { data: res } = await this.client.get('/user/sign');
-
       if (res && res.code === 0) {
         const nickname = res.data?.nickname || `账号${this.index}`;
         const reward = res.data?.reward;
-
-        if (reward) {
-          Env.log(`账号 ${this.index} [${nickname}] 签到成功: ${reward.name} ${reward.desc}`);
-        } else {
-          Env.log(`账号 ${this.index} [${nickname}] 签到成功 (无奖励信息)`);
-        }
-        return true;
+        const msg = reward ? `${reward.name} ${reward.desc}` : '无奖励信息';
+        $.log(`账号 [${nickname}] 签到成功: ${msg}`);
       } else {
-        Env.log(`账号 ${this.index} 签到失败: ${res?.message || '响应格式错误'}`, 'error');
-        return false;
+        $.log(`账号 [${this.index}] 签到失败: ${res?.message || '未知错误'}`, 'WARN');
       }
     } catch (error) {
-      const msg = error.response ? `HTTP ${error.response.status}` : error.message;
-      Env.log(`账号 ${this.index} 网络异常: ${msg}`, 'error');
-      return false;
+      $.log(`账号 [${this.index}] 请求异常: ${error.message}`, 'ERROR');
     }
   }
 
   async run() {
-    Env.log(`--- 开始执行账号 ${this.index} ---`);
-    if (!this.cookie) {
-      Env.log(`账号 ${this.index} Cookie无效`, 'error');
-      return;
-    }
     await this.signIn();
   }
 }
 
 async function main() {
-  const cookies = Env.getCookies();
-
+  const cookies = $.get_envs();
   if (cookies.length === 0) {
-    Env.log(`未找到环境变量 ${Env.variable}, 请检查配置`, 'error');
+    $.log(`未找到环境变量 ${$.env_name}`, 'ERROR');
     return;
   }
 
-  Env.log(`发现 ${cookies.length} 个账号`);
-
+  $.log(`发现 ${cookies.length} 个账号`);
   for (let i = 0; i < cookies.length; i++) {
-    const task = new Chaoxinwen(cookies[i], i);
-    await task.run();
+    $.log(`开始执行第 ${i + 1} 个账号`);
+    const worker = new Task(cookies[i], i);
+    await worker.run();
+
+    // 账号间随机延迟 1-3s
+    if (i < cookies.length - 1) {
+      const delay = Math.floor(Math.random() * 2000) + 1000;
+      await $.wait(delay);
+    }
   }
 }
 
 main()
-  .catch((err) => Env.log(`程序运行崩溃: ${err.message}`, 'error'))
-  .finally(() => Env.log('全部任务执行完毕'));
+  .catch((e) => $.log(`脚本异常中断: ${e.message}`, 'ERROR'))
+  .finally(() => $.log('全部任务执行完毕'));
