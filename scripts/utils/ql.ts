@@ -1,10 +1,10 @@
 /**
- * AutoPilot 青龙 API 封装
+ * AutoPilot  API 
  *
- * 提供青龙面板 API 的封装，包括：
- * - 环境变量管理
- * - 任务管理
- * - 系统信息获取
+ *  API 
+ * - 
+ * - 
+ * - 
  *
  * @author Astral
  * @version 1.0.0
@@ -55,15 +55,15 @@ export class QLAPI {
   }
 
   /**
-   * 获取 Token
+   *  Token
    */
   private getToken(): string {
-    // 优先使用环境变量中的 Token
+    //  Token
     if (process.env.QL_TOKEN) {
       return process.env.QL_TOKEN;
     }
 
-    // 从文件中读取 Token
+    //  Token
     const possiblePaths = [
       '/ql/data/config/auth.json',
       '/ql/config/auth.json',
@@ -82,11 +82,11 @@ export class QLAPI {
       }
     }
 
-    throw new Error('无法获取青龙 Token，请配置环境变量 QL_TOKEN 或确保青龙配置文件存在');
+    throw new Error(' Token QL_TOKEN ');
   }
 
   /**
-   * 获取请求头
+   * 
    */
   private getHeaders(): Record<string, string> {
     return {
@@ -97,7 +97,7 @@ export class QLAPI {
   }
 
   /**
-   * 获取所有环境变量
+   * 
    */
   async getEnvs(searchValue?: string): Promise<EnvVar[]> {
     try {
@@ -113,19 +113,19 @@ export class QLAPI {
 
       return response.data.data || [];
     } catch (error) {
-      throw new Error(`获取环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 获取指定名称的环境变量
+   * 
    */
   async getEnvByName(name: string): Promise<EnvVar[]> {
     return this.getEnvs(name);
   }
 
   /**
-   * 获取环境变量数量
+   * 
    */
   async getEnvsCount(): Promise<number> {
     const envs = await this.getEnvs();
@@ -133,7 +133,7 @@ export class QLAPI {
   }
 
   /**
-   * 根据 ID 获取环境变量
+   *  ID 
    */
   async getEnvById(id: string): Promise<EnvVar | null> {
     try {
@@ -146,12 +146,12 @@ export class QLAPI {
       }
       return null;
     } catch (error) {
-      throw new Error(`获取环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 添加环境变量
+   * 
    */
   async addEnv(name: string, value: string, remarks?: string): Promise<EnvVar> {
     try {
@@ -170,12 +170,12 @@ export class QLAPI {
 
       return response.data.data;
     } catch (error) {
-      throw new Error(`添加环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 更新环境变量
+   * 
    */
   async updateEnv(id: string, name: string, value: string, remarks?: string): Promise<EnvVar> {
     try {
@@ -196,12 +196,12 @@ export class QLAPI {
 
       return response.data.data;
     } catch (error) {
-      throw new Error(`更新环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 删除环境变量
+   * 
    */
   async deleteEnv(ids: string[]): Promise<void> {
     try {
@@ -214,12 +214,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`删除环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 启用环境变量
+   * 
    */
   async enableEnv(ids: string[]): Promise<void> {
     try {
@@ -232,12 +232,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`启用环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 禁用环境变量
+   * 
    */
   async disableEnv(ids: string[]): Promise<void> {
     try {
@@ -250,12 +250,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`禁用环境变量失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 获取所有任务
+   * 
    */
   async getTasks(): Promise<Task[]> {
     try {
@@ -266,12 +266,12 @@ export class QLAPI {
 
       return response.data.data || [];
     } catch (error) {
-      throw new Error(`获取任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 根据 ID 获取任务
+   *  ID 
    */
   async getTaskById(id: string): Promise<Task | null> {
     try {
@@ -284,12 +284,12 @@ export class QLAPI {
       }
       return null;
     } catch (error) {
-      throw new Error(`获取任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 添加任务
+   * 
    */
   async addTask(
     name: string,
@@ -314,12 +314,12 @@ export class QLAPI {
 
       return response.data.data;
     } catch (error) {
-      throw new Error(`添加任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 更新任务
+   * 
    */
   async updateTask(
     id: string,
@@ -347,12 +347,12 @@ export class QLAPI {
 
       return response.data.data;
     } catch (error) {
-      throw new Error(`更新任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 删除任务
+   * 
    */
   async deleteTask(ids: string[]): Promise<void> {
     try {
@@ -365,12 +365,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`删除任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 启用任务
+   * 
    */
   async enableTask(ids: string[]): Promise<void> {
     try {
@@ -383,12 +383,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`启用任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 禁用任务
+   * 
    */
   async disableTask(ids: string[]): Promise<void> {
     try {
@@ -401,12 +401,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`禁用任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 运行任务
+   * 
    */
   async runTask(ids: string[]): Promise<void> {
     try {
@@ -419,12 +419,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`运行任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 停止任务
+   * 
    */
   async stopTask(ids: string[]): Promise<void> {
     try {
@@ -437,12 +437,12 @@ export class QLAPI {
         }
       );
     } catch (error) {
-      throw new Error(`停止任务失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 获取系统信息
+   * 
    */
   async getSystemInfo(): Promise<any> {
     try {
@@ -453,12 +453,12 @@ export class QLAPI {
 
       return response.data.data;
     } catch (error) {
-      throw new Error(`获取系统信息失败: ${(error as Error).message}`);
+      throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 获取环境变量状态
+   * 
    */
   async getEnvStatus(id: string): Promise<number> {
     try {
