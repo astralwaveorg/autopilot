@@ -26,9 +26,9 @@ class BaitianGame {
     try {
       const response = await $.req.get('https://www.baitiangame.com/api/user/sign', {
         headers: {
-          'Cookie': this.cookie,
-          'Content-Type': 'application/json'
-        }
+          Cookie: this.cookie,
+          'Content-Type': 'application/json',
+        },
       });
 
       const res = response.data;
@@ -68,7 +68,7 @@ class BaitianGame {
 }
 
 $.init(BaitianGame, 'BAITIANGAME_COOKIE')
-  .catch(error => {
+  .catch((error) => {
     $.log(`程序执行失败: ${error.message}`, 'error');
     console.error(error);
   })

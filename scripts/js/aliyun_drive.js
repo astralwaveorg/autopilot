@@ -1,11 +1,11 @@
 /**
  * 阿里云盘自动签到脚本
- * * @Author: Astral
+ * @Author: Astral
  * @Date: 2026-01-28
  * @Version: 2.1.0
- * * 环境变量：
+ * 环境变量：
  * ALIYUN_DRIVE_TOKEN: refresh_token，多账号支持分隔符：@ 或 换行 或 &
- * * 示例：
+ * 示例：
  * ALIYUN_DRIVE_TOKEN="token1@token2"
  */
 

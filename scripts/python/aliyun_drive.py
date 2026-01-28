@@ -1,174 +1,82 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-
-
-:
-    ALIYUN_DRIVE_TOKEN: refresh_token &\n  @ 
-
-: https://www.aliyundrive.com/
-"""
 
 import json
 import os
-import sys
 
 import requests
 import urllib3
 
+from dailycheckin import CheckIn
+
 urllib3.disable_warnings()
 
 
-class AliYunDrive:
-    """"""
+class AliYun(CheckIn):
+    name = "阿里云盘"
 
-    def __init__(self, token: str):
-        self.token = token.strip()
-        self.access_token = None
-        self.sign_data = None
+    def __init__(self, check_item: dict):
+        self.check_item = check_item
 
-    def refresh_access_token(self) -> bool:
-        """"""
-        try:
-            url = "https://auth.aliyundrive.com/v2/account/token"
-            data = {
-                "grant_type": "refresh_token",
-                "refresh_token": self.token
-            }
+    def update_token(self, refresh_token):
+        url = "https://auth.aliyundrive.com/v2/account/token"
+        data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
+        response = requests.post(url=url, json=data).json()
+        access_token = response.get("access_token")
+        return access_token
 
-            response = requests.post(url, json=data, timeout=10)
-            result = response.json()
+    def sign(self, access_token):
+        url = "https://member.aliyundrive.com/v1/activity/sign_in_list"
+        headers = {"Authorization": access_token, "Content-Type": "application/json"}
+        result = requests.post(url=url, headers=headers, json={}).json()
+        sign_days = result["result"]["signInCount"]
+        data = {"signInDay": sign_days}
+        url_reward = "https://member.aliyundrive.com/v1/activity/sign_in_reward"
+        requests.post(url=url_reward, headers=headers, data=json.dumps(data))
+        if "success" in result:
+            print("签到成功")
+            for i, j in enumerate(result["result"]["signInLogs"]):
+                if j["status"] == "miss":
+                    day_json = result["result"]["signInLogs"][i - 1]
+                    if not day_json["isReward"]:
+                        msg = [
+                            {
+                                "name": "阿里云盘",
+                                "value": "签到成功，今日未获得奖励",
+                            }
+                        ]
+                    else:
+                        msg = [
+                            {
+                                "name": "累计签到",
+                                "value": result["result"]["signInCount"],
+                            },
+                            {
+                                "name": "阿里云盘",
+                                "value": "获得奖励：{}{}".format(
+                                    day_json["reward"]["name"],
+                                    day_json["reward"]["description"],
+                                ),
+                            },
+                        ]
 
-            if "access_token" in result:
-                self.access_token = result["access_token"]
-                return True
+                    return msg
 
-            print(f" token: {result.get('message', '')}")
-            return False
-
-        except Exception as e:
-            print(f" token: {str(e)}")
-            return False
-
-    def get_sign_list(self) -> bool:
-        """"""
-        try:
-            url = "https://member.aliyundrive.com/v1/activity/sign_in_list"
-            headers = {
-                "Authorization": f"Bearer {self.access_token}",
-                "Content-Type": "application/json"
-            }
-
-            response = requests.post(url, headers=headers, json={}, timeout=10)
-            result = response.json()
-
-            if "result" in result:
-                self.sign_data = result["result"]
-                return True
-
-            print(f" : {result.get('message', '')}")
-            return False
-
-        except Exception as e:
-            print(f" : {str(e)}")
-            return False
-
-    def claim_reward(self, sign_day: int) -> bool:
-        """"""
-        try:
-            url = "https://member.aliyundrive.com/v1/activity/sign_in_reward"
-            headers = {
-                "Authorization": f"Bearer {self.access_token}",
-                "Content-Type": "application/json"
-            }
-            data = {"signInDay": sign_day}
-
-            response = requests.post(url, headers=headers, json=data, timeout=10)
-            result = response.json()
-
-            return result.get("success", False)
-
-        except Exception as e:
-            print(f" : {str(e)}")
-            return False
-
-    def sign(self) -> dict:
-        """"""
-        if not self.refresh_access_token():
-            return {"status": "fail", "message": "token"}
-
-        if not self.get_sign_list():
-            return {"status": "fail", "message": ""}
-
-        sign_count = self.sign_data.get("signInCount", 0)
-        sign_logs = self.sign_data.get("signInLogs", [])
-
-        # 
-        today_sign = None
-        for log in reversed(sign_logs):
-            if log.get("status") == "miss":
-                continue
-            if not log.get("isReward"):
-                today_sign = log
-                break
-
-        if not today_sign:
-            return {
-                "status": "success",
-                "message": f" {sign_count} "
-            }
-
-        # 
-        self.claim_reward(sign_count)
-
-        reward = today_sign.get("reward", {})
-        reward_name = reward.get("name", "")
-        reward_desc = reward.get("description", "")
-
-        message = f" {sign_count} "
-        if reward_name:
-            message += f"\n: {reward_name} {reward_desc}"
-
-        return {
-            "status": "success",
-            "message": message
-        }
-
-
-def main():
-    """"""
-    tokens = os.getenv("ALIYUN_DRIVE_TOKEN", "")
-
-    if not tokens:
-        print("  ALIYUN_DRIVE_TOKEN")
-        return
-
-    # 
-    for sep in ["&", "\n", "@"]:
-        if sep in tokens:
-            tokens = tokens.split(sep)
-            break
-    else:
-        tokens = [tokens]
-
-    print(f"  {len(tokens)} ")
-
-    for index, token in enumerate(tokens, 1):
-        if not token.strip():
-            continue
-
-        print(f"\n{'='*40}")
-        print(f" {index}/{len(tokens)}")
-        print(f"{'='*40}")
-
-        drive = AliYunDrive(token)
-        result = drive.sign()
-
-        if result["status"] == "success":
-            print(f" {result['message']}")
-        else:
-            print(f" {result['message']}")
+    def main(self):
+        refresh_token = self.check_item.get("refresh_token")
+        access_token = self.update_token(refresh_token)
+        if not access_token:
+            return [{"name": "阿里云盘", "value": "token 过期"}]
+        msg = self.sign(access_token)
+        msg = "\n".join([f"{one.get('name')}: {one.get('value')}" for one in msg])
+        return msg
 
 
 if __name__ == "__main__":
-    main()
+    with open(
+        os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"),
+        encoding="utf-8",
+    ) as f:
+        datas = json.loads(f.read())
+    _check_item = datas.get("ALIYUN", [])[0]
+    print(AliYun(check_item=_check_item).main())
