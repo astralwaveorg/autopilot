@@ -49,8 +49,8 @@ coverage/
 .nyc_output/
 
 # 其他
-/AGENTS.md
-/docs/VERIFICATION_REPORT.md
-/docs/REFACTORING_SUMMARY.md
+AGENTS.md
+VERIFICATION_REPORT.md
+REFACTORING_SUMMARY.md
 .cache/
 .parcel-cache/
