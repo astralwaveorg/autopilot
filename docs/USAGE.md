@@ -136,10 +136,7 @@ pip3 install -r dependencies/requirements.txt
 
 ### 签到类脚本
 
-签到类脚本位于 `scripts/checkin/` 目录，包括：
-
-- `example_signin.js`：示例签到脚本
-- 更多脚本持续添加中...
+签到类脚本位于 `scripts/checkin/` 目录，包括各类APP、小程序、网站的自动签到脚本。
 
 使用方法：
 
@@ -151,9 +148,8 @@ pip3 install -r dependencies/requirements.txt
 
 信息推送类脚本位于 `scripts/info/` 目录，包括：
 
-- `60s_news.js`：60s 早报推送
-- `weather.js`：天气预报推送
-- 更多脚本持续添加中...
+- `daily_news.ts`：60s 早报推送
+- `weather_report.ts`：天气预报推送
 
 使用方法：
 
@@ -165,9 +161,9 @@ pip3 install -r dependencies/requirements.txt
 
 工具类脚本位于 `scripts/tools/` 目录，包括：
 
-- `disable_duplicate.js`：禁用重复脚本
-- `alipan_clean.js`：阿里云盘小雅挂载清理
-- `health_check.sh`：系统健康检查
+- `disable_duplicate.ts`：禁用重复脚本
+- `alipan_clean.ts`：阿里云盘小雅挂载清理
+- `modify_notify.js`：修改通知配置
 - 更多工具持续添加中...
 
 使用方法：
@@ -188,7 +184,7 @@ pip3 install -r dependencies/requirements.txt
 
 ```bash
 cd /ql/scripts/autopilot
-node scripts/checkin/example_signin.js
+node scripts/checkin/aliyun_drive.js
 ```
 
 ## 通知配置
@@ -256,19 +252,19 @@ AutoPilot 支持 20+ 种通知方式，详见 `configs/env.example` 文件。
 2025-01-27 08:00:00
 
 ========== 账号 1 ==========
-✅ 用户: testuser
-✅ 签到成功，获得 10 积分，连续签到 5 天
-✅ 领取奖励成功: 签到礼包
-✅ 账号 1 执行完成
+用户: testuser
+签到成功，获得 10 积分，连续签到 5 天
+领取奖励成功: 签到礼包
+账号 1 执行完成
 
 ========== 账号 2 ==========
-❌ Token 为空
+Token 为空
 
 执行总结
 ==================================================
-✅ 成功: 3
-❌ 失败: 1
-⚠️  警告: 0
+成功: 3
+失败: 1
+警告: 0
 ==================================================
 ```
 
@@ -402,9 +398,9 @@ class Task {
       // 业务逻辑
       await this.main();
 
-      $.log(`✅ 账号 ${this.index + 1} 执行完成`, 'info');
+      $.log(`账号 ${this.index + 1} 执行完成`, 'info');
     } catch (error) {
-      $.log(`❌ 账号 ${this.index + 1} 执行失败: ${error.message}`, 'error');
+      $.log(`账号 ${this.index + 1} 执行失败: ${error.message}`, 'error');
     }
   }
 
@@ -415,7 +411,7 @@ class Task {
 
 $.init(Task, 'ENV_VAR_NAME')
   .catch(error => {
-    $.log(`❌ 程序执行失败: ${error.message}`, 'error');
+    $.log(`程序执行失败: ${error.message}`, 'error');
   })
   .finally(() => {
     $.done();
@@ -448,9 +444,9 @@ class Task {
       // 业务逻辑
       await this.main();
 
-      $.log(`✅ 账号 ${this.index + 1} 执行完成`, 'info');
+      $.log(`账号 ${this.index + 1} 执行完成`, 'info');
     } catch (error) {
-      $.log(`❌ 账号 ${this.index + 1} 执行失败: ${(error as Error).message}`, 'error');
+      $.log(`账号 ${this.index + 1} 执行失败: ${(error as Error).message}`, 'error');
     }
   }
 
@@ -461,7 +457,7 @@ class Task {
 
 $.init(Task, 'ENV_VAR_NAME')
   .catch(error => {
-    $.log(`❌ 程序执行失败: ${(error as Error).message}`, 'error');
+    $.log(`程序执行失败: ${(error as Error).message}`, 'error');
   })
   .finally(() => {
     $.done();

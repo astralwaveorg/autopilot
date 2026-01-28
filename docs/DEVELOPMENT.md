@@ -21,11 +21,40 @@ autopilot/
 │   │   ├── common.ts       # 通用工具函数
 │   │   ├── ql.ts           # 青龙API封装
 │   │   └── sendNotify.js   # 统一通知模块
-│   ├── checkin/            # 签到类脚本
-│   ├── info/               # 信息推送类脚本
-│   ├── tools/              # 工具类脚本
-│   ├── templates/          # 脚本模板
-│   └── storage/            # 持久化存储
+│   ├── checkin/            # 签到类脚本（通用签到）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── info/               # 信息类脚本（新闻、天气等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── tools/              # 工具类脚本（清理、安装等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── shopping/           # 购物类脚本（美团、超市等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── car/                # 汽车类脚本（车企签到等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── life/               # 生活类脚本（医疗、黄历等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── finance/            # 金融类脚本（银行、支付等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── media/              # 媒体类脚本（视频、阅读、游戏等）
+│   │   ├── js/
+│   │   ├── py/
+│   │   └── ts/
+│   ├── storage/            # 持久化存储
+│   └── templates/          # 脚本模板
 ├── configs/                # 配置文件
 │   ├── env.example         # 环境变量示例
 │   └── crontab.example     # 定时任务示例
@@ -326,9 +355,9 @@ class Task:
             # 业务逻辑
             await self.main()
 
-            print(f"✅ 账号 {self.index + 1} 执行完成")
+            print(f"账号 {self.index + 1} 执行完成")
         except Exception as e:
-            print(f"❌ 账号 {self.index + 1} 执行失败: {str(e)}")
+            print(f"账号 {self.index + 1} 执行失败: {str(e)}")
 
     async def main(self) -> None:
         """主逻辑"""
@@ -357,11 +386,11 @@ class Task:
 
             if response.status_code == 200:
                 data = response.json()
-                print(f"✅ 用户: {data['data']['username']}")
+                print(f"用户: {data['data']['username']}")
             else:
-                print(f"❌ 获取用户信息失败: {data.get('message')}")
+                print(f"获取用户信息失败: {data.get('message')}")
         except Exception as e:
-            print(f"❌ 获取用户信息异常: {str(e)}")
+            print(f"获取用户信息异常: {str(e)}")
 
     async def sign_in(self) -> None:
         """签到"""
@@ -379,13 +408,13 @@ class Task:
 
             if response.status_code == 200:
                 data = response.json()
-                print(f"✅ 签到成功，获得 {data['data']['points']} 积分")
+                print(f"签到成功，获得 {data['data']['points']} 积分")
             elif response.status_code == 400 and '已签到' in data.get('message', ''):
-                print("⚠️  今日已签到")
+                print("今日已签到")
             else:
-                print(f"❌ 签到失败: {data.get('message')}")
+                print(f"签到失败: {data.get('message')}")
         except Exception as e:
-            print(f"❌ 签到异常: {str(e)}")
+            print(f"签到异常: {str(e)}")
 
     async def get_reward(self) -> None:
         """领取奖励"""
@@ -403,20 +432,20 @@ class Task:
 
             if response.status_code == 200:
                 data = response.json()
-                print(f"✅ 领取奖励成功: {data['data']['name']}")
+                print(f"领取奖励成功: {data['data']['name']}")
             elif response.status_code == 400 and '已领取' in data.get('message', ''):
-                print("⚠️  奖励已领取")
+                print("奖励已领取")
             else:
-                print(f"⚠️  领取奖励失败: {data.get('message')}")
+                print(f"领取奖励失败: {data.get('message')}")
         except Exception as e:
-            print(f"⚠️  领取奖励异常: {str(e)}")
+            print(f"领取奖励异常: {str(e)}")
 
 async def main():
     """主函数"""
     env_value = os.getenv('ENV_VAR_NAME')
 
     if not env_value:
-        print("❌ 未找到环境变量 ENV_VAR_NAME")
+        print("未找到环境变量 ENV_VAR_NAME")
         return
 
     # 解析多账号
@@ -440,7 +469,7 @@ if __name__ == '__main__':
 try {
   await this.signIn();
 } catch (error) {
-  $.log(`❌ 签到失败: ${error.message}`, 'error');
+  $.log(`签到失败: ${error.message}`, 'error');
   // 不要吞掉错误，记录并继续
 }
 ```
@@ -485,7 +514,7 @@ const data = await storage.getItem('key');
 
 ```javascript
 if (!this.config || !this.config.trim()) {
-  $.log('❌ 配置为空', 'error');
+  $.log('配置为空', 'error');
   return;
 }
 ```

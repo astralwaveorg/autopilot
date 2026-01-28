@@ -13,16 +13,16 @@ echo "========================================"
 
 # 检查青龙面板环境
 if [ ! -d "/ql" ]; then
-	echo "❌ 错误: 未检测到青龙面板环境"
+	echo "错误: 未检测到青龙面板环境"
 	echo "💡 请确保在青龙面板中运行此脚本"
 	exit 1
 fi
 
 # 拉取仓库
-echo "📥 拉取脚本仓库..."
+echo "拉取脚本仓库..."
 ql repo https://github.com/astralwaveorg/autopilot.git "scripts" "" "" "main"
 
-echo "✅ AutoPilot 安装完成！"
+echo "AutoPilot 安装完成！"
 echo "========================================"
 echo "📋 接下来需要手动配置："
 echo ""

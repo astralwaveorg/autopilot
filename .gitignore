@@ -50,5 +50,7 @@ coverage/
 
 # 其他
 /AGENTS.md
+/docs/VERIFICATION_REPORT.md
+/docs/REFACTORING_SUMMARY.md
 .cache/
 .parcel-cache/
