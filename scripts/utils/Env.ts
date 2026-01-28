@@ -1,12 +1,5 @@
 /**
- * AutoPilot 
- *
- * 
- * - 
- * - 
- * - 
- * - 
- * - 
+ * AutoPilot
  *
  * @author Astral
  * @version 1.0.0
@@ -18,19 +11,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export interface EnvOptions {
-  sep?: string[];  // 
-  notifyType?: number;  // 0-, 1-, 2-
-  logLevel?: 'debug' | 'info' | 'warn' | 'error';  // 
+  sep?: string[];
+  notifyType?: number;
+  logLevel?: 'debug' | 'info' | 'warn' | 'error';
 }
 
 export class Env {
-  public index = 0;  // 
-  public req: AxiosInstance;  // 
-  public hasError = false;  // 
-  public msgs: string[] = [];  // 
-  public logs: string[] = [];  // 
-  public startTime: number;  // 
-  public options: EnvOptions;  // 
+  public index = 0;
+  public req: AxiosInstance;
+  public hasError = false;
+  public msgs: string[] = [];
+  public logs: string[] = [];
+  public startTime: number;
+  public options: EnvOptions;
 
   constructor(
     public name: string,
@@ -44,7 +37,6 @@ export class Env {
       ...options,
     };
 
-    // 
     this.req = axios.create({
       timeout: Number(process.env.REQUEST_TIMEOUT) * 1000 || 30000,
       headers: {
@@ -52,7 +44,6 @@ export class Env {
       },
     });
 
-    // 
     if (process.env.HTTP_PROXY || process.env.HTTPS_PROXY) {
       this.req.defaults.proxy = {
         host: process.env.HTTP_PROXY_HOST || '127.0.0.1',
@@ -64,7 +55,7 @@ export class Env {
   }
 
   /**
-   * 
+   *
    */
   async init(TaskClass: any, envName: string): Promise<void> {
     try {
@@ -103,12 +94,11 @@ export class Env {
   }
 
   /**
-   * 
+   *
    */
   private parse(envValue: string, seps: string[]): Record<string, string> {
     let sep = seps[0];
 
-    // 
     for (const s of seps) {
       if (envValue.includes(s)) {
         sep = s;
@@ -129,13 +119,12 @@ export class Env {
   }
 
   /**
-   * 
+   *
    */
   log(msg: string, level: 'debug' | 'info' | 'warn' | 'error' = 'info'): void {
     const timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
     const logMsg = `[${timestamp}] [${level.toUpperCase()}] ${msg}`;
 
-    // 
     if (this.shouldLog(level)) {
       switch (level) {
         case 'debug':
@@ -153,22 +142,19 @@ export class Env {
       }
     }
 
-    // 
     this.logs.push(logMsg);
 
-    // 
     if (level === 'error') {
       this.hasError = true;
     }
 
-    // 
     if (level !== 'debug') {
       this.msgs.push(msg);
     }
   }
 
   /**
-   * 
+   *
    */
   private shouldLog(level: string): boolean {
     const levels = ['debug', 'info', 'warn', 'error'];
@@ -178,7 +164,7 @@ export class Env {
   }
 
   /**
-   * HTTP 
+   * HTTP
    */
   async request<T = any>(config: AxiosRequestConfig): Promise<T> {
     try {
@@ -191,35 +177,35 @@ export class Env {
   }
 
   /**
-   * GET 
+   * GET
    */
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>({ ...config, method: 'GET', url });
   }
 
   /**
-   * POST 
+   * POST
    */
   async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>({ ...config, method: 'POST', url, data });
   }
 
   /**
-   * PUT 
+   * PUT
    */
   async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>({ ...config, method: 'PUT', url, data });
   }
 
   /**
-   * DELETE 
+   * DELETE
    */
   async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE', url });
   }
 
   /**
-   * 
+   *
    */
   getStorage(name: string) {
     const storageDir = path.join(__dirname, '../storage');
@@ -268,7 +254,7 @@ export class Env {
   }
 
   /**
-   * 
+   *
    */
   async done(): Promise<void> {
     const endTime = Date.now();
@@ -276,38 +262,36 @@ export class Env {
 
     this.log(` ${this.name}  ${duration} `, 'info');
 
-    // 
     if (this.shouldNotify()) {
       await this.sendNotify();
     }
 
-    // 
     console.log('\n' + '='.repeat(50));
     console.log(` `);
     console.log('='.repeat(50));
-    console.log(` : ${this.msgs.filter(m => !m.includes('') && !m.includes('')).length}`);
-    console.log(` : ${this.msgs.filter(m => m.includes('')).length}`);
-    console.log(`  : ${this.msgs.filter(m => m.includes('')).length}`);
+    console.log(` : ${this.msgs.filter((m) => !m.includes('') && !m.includes('')).length}`);
+    console.log(` : ${this.msgs.filter((m) => m.includes('')).length}`);
+    console.log(`  : ${this.msgs.filter((m) => m.includes('')).length}`);
     console.log('='.repeat(50));
   }
 
   /**
-   * 
+   *
    */
   private shouldNotify(): boolean {
     const { notifyType } = this.options;
 
     if (notifyType === 0) {
-      return false;  // 
+      return false;
     } else if (notifyType === 1) {
-      return this.hasError;  // 
+      return this.hasError;
     } else {
-      return true;  // 
+      return true;
     }
   }
 
   /**
-   * 
+   *
    */
   private async sendNotify(): Promise<void> {
     try {
@@ -332,9 +316,6 @@ export class Env {
     }
   }
 
-  /**
-   * 
-   */
   debug(msg: string): void {
     this.log(msg, 'debug');
   }

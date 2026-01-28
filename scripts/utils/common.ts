@@ -1,7 +1,5 @@
 /**
- * AutoPilot 
- *
- * 
+ * AutoPilot
  *
  * @author Astral
  * @version 1.0.0
@@ -12,11 +10,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
 import moment from 'moment';
-
-/**
- * 
- */
-export function randomString(length: number = 32, charset: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'): string {
+export function randomString(
+  length: number = 32,
+  charset: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+): string {
   let result = '';
   for (let i = 0; i < length; i++) {
     result += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -25,7 +22,7 @@ export function randomString(length: number = 32, charset: string = 'ABCDEFGHIJK
 }
 
 /**
- * 
+ *
  */
 export function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -35,9 +32,9 @@ export function randomInt(min: number, max: number): number {
  *  UUID
  */
 export function uuid(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -55,16 +52,16 @@ export function guid(): string {
 }
 
 /**
- *  MAC 
+ *  MAC
  */
 export function randomMac(): string {
-  return 'XX:XX:XX:XX:XX:XX'.replace(/X/g, function() {
+  return 'XX:XX:XX:XX:XX:XX'.replace(/X/g, function () {
     return '0123456789ABCDEF'.charAt(Math.floor(Math.random() * 16));
   });
 }
 
 /**
- * 
+ *
  */
 export function maskPhone(phone: string): string {
   if (phone.length === 11) {
@@ -74,7 +71,7 @@ export function maskPhone(phone: string): string {
 }
 
 /**
- * 
+ *
  */
 export function maskEmail(email: string): string {
   const [username, domain] = email.split('@');
@@ -86,119 +83,119 @@ export function maskEmail(email: string): string {
 }
 
 /**
- * 
+ *
  */
 export function timestamp(): number {
   return Math.floor(Date.now() / 1000);
 }
 
 /**
- * 
+ *
  */
 export function timestampMs(): number {
   return Date.now();
 }
 
 /**
- * 
+ *
  */
 export function timestampToDate(ts: number, format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   return moment(ts * 1000).format(format);
 }
 
 /**
- * 
+ *
  */
 export function dateToTimestamp(date: string, format: string = 'YYYY-MM-DD HH:mm:ss'): number {
   return moment(date, format).unix();
 }
 
 /**
- * 
+ *
  */
 export function currentDate(format: string = 'YYYY-MM-DD'): string {
   return moment().format(format);
 }
 
 /**
- * 
+ *
  */
 export function currentTime(format: string = 'HH:mm:ss'): string {
   return moment().format(format);
 }
 
 /**
- * 
+ *
  */
 export function currentDateTime(format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   return moment().format(format);
 }
 
 /**
- * 
+ *
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
- * MD5 
+ * MD5
  */
 export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex');
 }
 
 /**
- * SHA1 
+ * SHA1
  */
 export function sha1(str: string): string {
   return crypto.createHash('sha1').update(str).digest('hex');
 }
 
 /**
- * SHA256 
+ * SHA256
  */
 export function sha256(str: string): string {
   return crypto.createHash('sha256').update(str).digest('hex');
 }
 
 /**
- * Base64 
+ * Base64
  */
 export function base64Encode(str: string): string {
   return Buffer.from(str, 'utf-8').toString('base64');
 }
 
 /**
- * Base64 
+ * Base64
  */
 export function base64Decode(str: string): string {
   return Buffer.from(str, 'base64').toString('utf-8');
 }
 
 /**
- * URL 
+ * URL
  */
 export function urlEncode(str: string): string {
   return encodeURIComponent(str);
 }
 
 /**
- * URL 
+ * URL
  */
 export function urlDecode(str: string): string {
   return decodeURIComponent(str);
 }
 
 /**
- * JSON 
+ * JSON
  */
 export function jsonStringify(obj: any, space: number = 2): string {
   return JSON.stringify(obj, null, space);
 }
 
 /**
- * JSON 
+ * JSON
  */
 export function jsonParse(str: string, defaultValue: any = null): any {
   try {
@@ -209,7 +206,7 @@ export function jsonParse(str: string, defaultValue: any = null): any {
 }
 
 /**
- * 
+ *
  */
 export function isEmpty(value: any): boolean {
   if (value === null || value === undefined) return true;
@@ -220,7 +217,7 @@ export function isEmpty(value: any): boolean {
 }
 
 /**
- *  JSON 
+ *  JSON
  */
 export function isJson(str: string): boolean {
   try {
@@ -232,12 +229,12 @@ export function isJson(str: string): boolean {
 }
 
 /**
- * 
+ *
  */
 export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object') return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as any;
-  if (obj instanceof Array) return obj.map(item => deepClone(item)) as any;
+  if (obj instanceof Array) return obj.map((item) => deepClone(item)) as any;
   if (obj instanceof Object) {
     const copy: any = {};
     for (const key in obj) {
@@ -250,28 +247,31 @@ export function deepClone<T>(obj: T): T {
 }
 
 /**
- * 
+ *
  */
 export function unique<T>(arr: T[]): T[] {
   return Array.from(new Set(arr));
 }
 
 /**
- * 
+ *
  */
 export function groupBy<T>(arr: T[], key: keyof T): Record<string, T[]> {
-  return arr.reduce((result, item) => {
-    const group = String(item[key]);
-    if (!result[group]) {
-      result[group] = [];
-    }
-    result[group].push(item);
-    return result;
-  }, {} as Record<string, T[]>);
+  return arr.reduce(
+    (result, item) => {
+      const group = String(item[key]);
+      if (!result[group]) {
+        result[group] = [];
+      }
+      result[group].push(item);
+      return result;
+    },
+    {} as Record<string, T[]>
+  );
 }
 
 /**
- * 
+ *
  */
 export function sortBy<T>(arr: T[], key: keyof T, order: 'asc' | 'desc' = 'asc'): T[] {
   return [...arr].sort((a, b) => {
@@ -284,14 +284,14 @@ export function sortBy<T>(arr: T[], key: keyof T, order: 'asc' | 'desc' = 'asc')
 }
 
 /**
- * 
+ *
  */
 export function randomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
 /**
- * 
+ *
  */
 export function shuffle<T>(arr: T[]): T[] {
   const result = [...arr];
@@ -303,52 +303,55 @@ export function shuffle<T>(arr: T[]): T[] {
 }
 
 /**
- * 
+ *
  */
 export function objectToArray<T>(obj: Record<string, T>): Array<{ key: string; value: T }> {
   return Object.entries(obj).map(([key, value]) => ({ key, value }));
 }
 
 /**
- * 
+ *
  */
 export function arrayToObject<T>(arr: Array<{ key: string; value: T }>): Record<string, T> {
-  return arr.reduce((result, item) => {
-    result[item.key] = item.value;
-    return result;
-  }, {} as Record<string, T>);
+  return arr.reduce(
+    (result, item) => {
+      result[item.key] = item.value;
+      return result;
+    },
+    {} as Record<string, T>
+  );
 }
 
 /**
- * 
+ *
  */
 export function getFileExtension(filename: string): string {
   return path.extname(filename).toLowerCase();
 }
 
 /**
- * 
+ *
  */
 export function getFileName(filename: string): string {
   return path.basename(filename, path.extname(filename));
 }
 
 /**
- * 
+ *
  */
 export function getFileDir(filepath: string): string {
   return path.dirname(filepath);
 }
 
 /**
- * 
+ *
  */
 export function fileExists(filepath: string): boolean {
   return fs.existsSync(filepath);
 }
 
 /**
- * 
+ *
  */
 export function readFile(filepath: string, encoding: BufferEncoding = 'utf-8'): string {
   try {
@@ -359,9 +362,13 @@ export function readFile(filepath: string, encoding: BufferEncoding = 'utf-8'): 
 }
 
 /**
- * 
+ *
  */
-export function writeFile(filepath: string, content: string, encoding: BufferEncoding = 'utf-8'): void {
+export function writeFile(
+  filepath: string,
+  content: string,
+  encoding: BufferEncoding = 'utf-8'
+): void {
   try {
     const dir = path.dirname(filepath);
     if (!fs.existsSync(dir)) {
@@ -374,7 +381,7 @@ export function writeFile(filepath: string, content: string, encoding: BufferEnc
 }
 
 /**
- * 
+ *
  */
 export function deleteFile(filepath: string): void {
   try {
@@ -387,7 +394,7 @@ export function deleteFile(filepath: string): void {
 }
 
 /**
- * 
+ *
  */
 export function getFileSize(filepath: string): number {
   try {
@@ -399,18 +406,18 @@ export function getFileSize(filepath: string): number {
 }
 
 /**
- * 
+ *
  */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
 /**
- * HTTP GET 
+ * HTTP GET
  */
 export async function httpGet<T = any>(url: string, config?: any): Promise<T> {
   try {
@@ -422,7 +429,7 @@ export async function httpGet<T = any>(url: string, config?: any): Promise<T> {
 }
 
 /**
- * HTTP POST 
+ * HTTP POST
  */
 export async function httpPost<T = any>(url: string, data?: any, config?: any): Promise<T> {
   try {
@@ -434,7 +441,7 @@ export async function httpPost<T = any>(url: string, data?: any, config?: any): 
 }
 
 /**
- * HTTP PUT 
+ * HTTP PUT
  */
 export async function httpPut<T = any>(url: string, data?: any, config?: any): Promise<T> {
   try {
@@ -446,7 +453,7 @@ export async function httpPut<T = any>(url: string, data?: any, config?: any): P
 }
 
 /**
- * HTTP DELETE 
+ * HTTP DELETE
  */
 export async function httpDelete<T = any>(url: string, config?: any): Promise<T> {
   try {
@@ -458,7 +465,7 @@ export async function httpDelete<T = any>(url: string, config?: any): Promise<T>
 }
 
 /**
- * 
+ *
  */
 export async function getGeoByGD(address: string): Promise<any> {
   const amapKey = process.env.AMAP_KEY;
@@ -471,7 +478,7 @@ export async function getGeoByGD(address: string): Promise<any> {
 }
 
 /**
- * IP 
+ * IP
  */
 export async function getLocationByIp(ip: string = ''): Promise<any> {
   const url = ip ? `https://ipapi.co/${ip}/json/` : 'https://ipapi.co/json/';
@@ -479,7 +486,7 @@ export async function getLocationByIp(ip: string = ''): Promise<any> {
 }
 
 /**
- * 
+ *
  */
 export async function getHitokoto(): Promise<string> {
   try {
@@ -491,7 +498,7 @@ export async function getHitokoto(): Promise<string> {
 }
 
 /**
- * 
+ *
  */
 export async function retry<T>(
   fn: () => Promise<T>,
@@ -515,40 +522,38 @@ export async function retry<T>(
 }
 
 /**
- * 
+ *
  */
 export async function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(` (${ms}ms)`)), ms)
-    ),
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(` (${ms}ms)`)), ms)),
   ]);
 }
 
 /**
- * 
+ *
  */
 export function debounce<T extends (...args: any[]) => any>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => void {
   let timer: NodeJS.Timeout;
-  return function(this: any, ...args: Parameters<T>) {
+  return function (this: any, ...args: Parameters<T>) {
     clearTimeout(timer);
     timer = setTimeout(() => fn.apply(this, args), delay);
   };
 }
 
 /**
- * 
+ *
  */
 export function throttle<T extends (...args: any[]) => any>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => void {
   let lastCall = 0;
-  return function(this: any, ...args: Parameters<T>) {
+  return function (this: any, ...args: Parameters<T>) {
     const now = Date.now();
     if (now - lastCall >= delay) {
       lastCall = now;

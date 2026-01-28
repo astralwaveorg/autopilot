@@ -1,7 +1,7 @@
 /**
- * AutoPilot 
+ * AutoPilot
  *
- *  20+ 
+ *  20+
  *
  * @author Astral
  * @version 1.0.0
@@ -13,11 +13,11 @@ const crypto = require('crypto');
 
 const timeout = 15000;
 
-// 
+// Push 配置
 const push_config = {
-  HITOKOTO: true,  // 
+  HITOKOTO: true, //
 
-  // PushPlus 
+  // PushPlus
   PUSH_PLUS_TOKEN: '',
   PUSH_PLUS_USER: '',
   PUSH_PLUS_TEMPLATE: 'html',
@@ -26,7 +26,7 @@ const push_config = {
   PUSH_PLUS_CALLBACKURL: '',
   PUSH_PLUS_TO: '',
 
-  // Telegram 
+  // Telegram
   TG_BOT_TOKEN: '',
   TG_USER_ID: '',
   TG_API_HOST: 'https://api.telegram.org',
@@ -34,7 +34,7 @@ const push_config = {
   TG_PROXY_PORT: '',
   TG_PROXY_AUTH: '',
 
-  // Bark 
+  // Bark
   BARK_PUSH: '',
   BARK_SOUND: '',
   BARK_ICON: '',
@@ -43,80 +43,80 @@ const push_config = {
   BARK_ARCHIVE: '',
   BARK_URL: '',
 
-  // Server 
+  // Server
   PUSH_KEY: '',
 
-  // PushDeer 
+  // PushDeer
   DEER_KEY: '',
   DEER_URL: '',
 
-  // 
+  //
   DD_BOT_TOKEN: '',
   DD_BOT_SECRET: '',
 
-  // 
+  //
   QYWX_KEY: '',
   QYWX_ORIGIN: 'https://qyapi.weixin.qq.com',
 
-  // 
+  //
   QYWX_AM: '',
 
-  // 
+  //
   FSKEY: '',
 
-  // Go-cqhttp 
+  // Go-cqhttp
   GOBOT_URL: '',
   GOBOT_QQ: '',
   GOBOT_TOKEN: '',
 
-  // Gotify 
+  // Gotify
   GOTIFY_URL: '',
   GOTIFY_TOKEN: '',
   GOTIFY_PRIORITY: 0,
 
-  // IGot 
+  // IGot
   IGOT_PUSH_KEY: '',
 
-  // Chat 
+  // Chat
   CHAT_URL: '',
   CHAT_TOKEN: '',
 
-  // 
+  //
   WE_PLUS_BOT_TOKEN: '',
   WE_PLUS_BOT_RECEIVER: '',
   WE_PLUS_BOT_VERSION: 'pro',
 
-  // 
+  //
   AIBOTK_KEY: '',
   AIBOTK_TYPE: '',
   AIBOTK_NAME: '',
 
-  // SMTP 
+  // SMTP
   SMTP_SERVICE: '',
   SMTP_EMAIL: '',
   SMTP_PASSWORD: '',
   SMTP_NAME: '',
 
-  // PushMe 
+  // PushMe
   PUSHME_KEY: '',
   PUSHME_URL: '',
 
-  // Chronocat 
+  // Chronocat
   CHRONOCAT_QQ: '',
   CHRONOCAT_TOKEN: '',
   CHRONOCAT_URL: '',
 
-  // Ntfy 
+  // Ntfy
   NTFY_URL: '',
   NTFY_TOPIC: '',
   NTFY_PRIORITY: '3',
 
-  // WxPusher 
+  // WxPusher
   WXPUSHER_APP_TOKEN: '',
   WXPUSHER_TOPIC_IDS: '',
   WXPUSHER_UIDS: '',
 
-  //  Webhook 
+  //  Webhook
   WEBHOOK_URL: '',
   WEBHOOK_BODY: '',
   WEBHOOK_HEADERS: '',
@@ -124,7 +124,7 @@ const push_config = {
   WEBHOOK_CONTENT_TYPE: '',
 };
 
-// 
+//
 for (const key in push_config) {
   const v = process.env[key];
   if (v) {
@@ -132,7 +132,7 @@ for (const key in push_config) {
   }
 }
 
-// 
+//
 const $ = {
   post: (params, callback) => {
     const { url, ...others } = params;
@@ -146,7 +146,7 @@ const $ = {
       },
       (err) => {
         callback(err?.response?.body || err);
-      },
+      }
     );
   },
   get: (params, callback) => {
@@ -161,14 +161,14 @@ const $ = {
       },
       (err) => {
         callback(err?.response?.body || err);
-      },
+      }
     );
   },
   logErr: console.log,
 };
 
 /**
- * 
+ *
  */
 async function one() {
   const url = 'https://v1.hitokoto.cn/';
@@ -178,7 +178,7 @@ async function one() {
 }
 
 /**
- * PushPlus 
+ * PushPlus
  */
 function pushPlusNotify(text, desp) {
   return new Promise((resolve) => {
@@ -236,18 +236,12 @@ function pushPlusNotify(text, desp) {
 }
 
 /**
- * Telegram 
+ * Telegram
  */
 function tgBotNotify(text, desp) {
   return new Promise((resolve) => {
-    const {
-      TG_BOT_TOKEN,
-      TG_USER_ID,
-      TG_PROXY_HOST,
-      TG_PROXY_PORT,
-      TG_API_HOST,
-      TG_PROXY_AUTH,
-    } = push_config;
+    const { TG_BOT_TOKEN, TG_USER_ID, TG_PROXY_HOST, TG_PROXY_PORT, TG_API_HOST, TG_PROXY_AUTH } =
+      push_config;
     if (TG_BOT_TOKEN && TG_USER_ID) {
       let options = {
         url: `${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
@@ -304,19 +298,12 @@ function tgBotNotify(text, desp) {
 }
 
 /**
- * Bark 
+ * Bark
  */
 function barkNotify(text, desp, params = {}) {
   return new Promise((resolve) => {
-    let {
-      BARK_PUSH,
-      BARK_ICON,
-      BARK_SOUND,
-      BARK_GROUP,
-      BARK_LEVEL,
-      BARK_ARCHIVE,
-      BARK_URL,
-    } = push_config;
+    let { BARK_PUSH, BARK_ICON, BARK_SOUND, BARK_GROUP, BARK_LEVEL, BARK_ARCHIVE, BARK_URL } =
+      push_config;
     if (BARK_PUSH) {
       if (!BARK_PUSH.startsWith('http')) {
         BARK_PUSH = `https://api.day.app/${BARK_PUSH}`;
@@ -363,7 +350,7 @@ function barkNotify(text, desp, params = {}) {
 }
 
 /**
- * Server 
+ * Server
  */
 function serverNotify(text, desp) {
   return new Promise((resolve) => {
@@ -408,7 +395,7 @@ function serverNotify(text, desp) {
 }
 
 /**
- * 
+ *
  */
 function ddBotNotify(text, desp) {
   return new Promise((resolve) => {
@@ -474,7 +461,7 @@ function ddBotNotify(text, desp) {
 }
 
 /**
- * 
+ *
  */
 function qywxBotNotify(text, desp) {
   return new Promise((resolve) => {
@@ -517,7 +504,7 @@ function qywxBotNotify(text, desp) {
 }
 
 /**
- * 
+ *
  */
 function fsBotNotify(text, desp) {
   return new Promise((resolve) => {
@@ -555,7 +542,7 @@ function fsBotNotify(text, desp) {
 }
 
 /**
- * Go-cqhttp 
+ * Go-cqhttp
  */
 function gobotNotify(text, desp) {
   return new Promise((resolve) => {
@@ -595,7 +582,7 @@ function gobotNotify(text, desp) {
 }
 
 /**
- * Gotify 
+ * Gotify
  */
 function gotifyNotify(text, desp) {
   return new Promise((resolve) => {
@@ -632,7 +619,7 @@ function gotifyNotify(text, desp) {
 }
 
 /**
- * PushDeer 
+ * PushDeer
  */
 function pushDeerNotify(text, desp) {
   return new Promise((resolve) => {
@@ -671,7 +658,7 @@ function pushDeerNotify(text, desp) {
 }
 
 /**
- * IGot 
+ * IGot
  */
 function iGotNotify(text, desp, params = {}) {
   return new Promise((resolve) => {
@@ -715,7 +702,7 @@ function iGotNotify(text, desp, params = {}) {
 }
 
 /**
- * Chat 
+ * Chat
  */
 function chatNotify(text, desp) {
   return new Promise((resolve) => {
@@ -753,7 +740,7 @@ function chatNotify(text, desp) {
 }
 
 /**
- * SMTP 
+ * SMTP
  */
 async function smtpNotify(text, desp) {
   const { SMTP_EMAIL, SMTP_PASSWORD, SMTP_SERVICE, SMTP_NAME } = push_config;
@@ -792,7 +779,7 @@ async function smtpNotify(text, desp) {
 }
 
 /**
- * PushMe 
+ * PushMe
  */
 function pushMeNotify(text, desp, params = {}) {
   return new Promise((resolve) => {
@@ -830,7 +817,7 @@ function pushMeNotify(text, desp, params = {}) {
 }
 
 /**
- * Chronocat 
+ * Chronocat
  */
 function chronocatNotify(title, desp) {
   return new Promise((resolve) => {
@@ -872,7 +859,7 @@ function chronocatNotify(title, desp) {
 }
 
 /**
- * Ntfy 
+ * Ntfy
  */
 function ntfyNotify(text, desp) {
   return new Promise((resolve) => {
@@ -910,7 +897,7 @@ function ntfyNotify(text, desp) {
 }
 
 /**
- * WxPusher 
+ * WxPusher
  */
 function wxpusherNotify(text, desp) {
   return new Promise((resolve) => {
@@ -955,23 +942,20 @@ function wxpusherNotify(text, desp) {
 }
 
 /**
- *  Webhook 
+ *  Webhook
  */
 function webhookNotify(text, desp) {
   return new Promise((resolve) => {
-    const {
-      WEBHOOK_URL,
-      WEBHOOK_BODY,
-      WEBHOOK_HEADERS,
-      WEBHOOK_METHOD,
-      WEBHOOK_CONTENT_TYPE,
-    } = push_config;
+    const { WEBHOOK_URL, WEBHOOK_BODY, WEBHOOK_HEADERS, WEBHOOK_METHOD, WEBHOOK_CONTENT_TYPE } =
+      push_config;
     if (WEBHOOK_URL) {
       const options = {
         url: WEBHOOK_URL,
         method: WEBHOOK_METHOD || 'POST',
         headers: WEBHOOK_HEADERS ? JSON.parse(WEBHOOK_HEADERS) : {},
-        json: WEBHOOK_BODY ? JSON.parse(WEBHOOK_BODY.replace('{title}', text).replace('{desp}', desp)) : {},
+        json: WEBHOOK_BODY
+          ? JSON.parse(WEBHOOK_BODY.replace('{title}', text).replace('{desp}', desp))
+          : {},
         timeout,
       };
       if (WEBHOOK_CONTENT_TYPE) {
@@ -997,10 +981,10 @@ function webhookNotify(text, desp) {
 }
 
 /**
- * 
+ *
  */
 async function sendNotify(text, desp, params = {}) {
-  // 
+  //
   if (push_config.HITOKOTO) {
     try {
       const hitokoto = await one();
@@ -1010,7 +994,7 @@ async function sendNotify(text, desp, params = {}) {
     }
   }
 
-  // 
+  //
   await Promise.all([
     pushPlusNotify(text, desp),
     tgBotNotify(text, desp),

@@ -1,10 +1,5 @@
 /**
- * AutoPilot  API 
- *
- *  API 
- * - 
- * - 
- * - 
+ * AutoPilot  API
  *
  * @author Astral
  * @version 1.0.0
@@ -48,7 +43,7 @@ export class QLAPI {
       baseURL: `${this.host}/api`,
       timeout: 30000,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     });
@@ -86,18 +81,18 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   private getHeaders(): Record<string, string> {
     return {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
+      Authorization: `Bearer ${this.token}`,
     };
   }
 
   /**
-   * 
+   *
    */
   async getEnvs(searchValue?: string): Promise<EnvVar[]> {
     try {
@@ -118,14 +113,14 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async getEnvByName(name: string): Promise<EnvVar[]> {
     return this.getEnvs(name);
   }
 
   /**
-   * 
+   *
    */
   async getEnvsCount(): Promise<number> {
     const envs = await this.getEnvs();
@@ -133,7 +128,7 @@ export class QLAPI {
   }
 
   /**
-   *  ID 
+   *  ID
    */
   async getEnvById(id: string): Promise<EnvVar | null> {
     try {
@@ -151,17 +146,19 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async addEnv(name: string, value: string, remarks?: string): Promise<EnvVar> {
     try {
       const response = await this.api.post(
         '/envs',
-        [{
-          name,
-          value,
-          remarks: remarks || '',
-        }],
+        [
+          {
+            name,
+            value,
+            remarks: remarks || '',
+          },
+        ],
         {
           headers: this.getHeaders(),
           params: { t: Date.now() },
@@ -175,7 +172,7 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async updateEnv(id: string, name: string, value: string, remarks?: string): Promise<EnvVar> {
     try {
@@ -201,61 +198,50 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async deleteEnv(ids: string[]): Promise<void> {
     try {
-      await this.api.delete(
-        '/envs',
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-          data: ids,
-        }
-      );
+      await this.api.delete('/envs', {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+        data: ids,
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async enableEnv(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/envs/enable',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/envs/enable', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async disableEnv(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/envs/disable',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/envs/disable', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async getTasks(): Promise<Task[]> {
     try {
@@ -271,7 +257,7 @@ export class QLAPI {
   }
 
   /**
-   *  ID 
+   *  ID
    */
   async getTaskById(id: string): Promise<Task | null> {
     try {
@@ -289,14 +275,9 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
-  async addTask(
-    name: string,
-    command: string,
-    schedule: string,
-    labels?: string[]
-  ): Promise<Task> {
+  async addTask(name: string, command: string, schedule: string, labels?: string[]): Promise<Task> {
     try {
       const response = await this.api.post(
         '/crons',
@@ -319,7 +300,7 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async updateTask(
     id: string,
@@ -352,97 +333,78 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async deleteTask(ids: string[]): Promise<void> {
     try {
-      await this.api.delete(
-        '/crons',
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-          data: ids,
-        }
-      );
+      await this.api.delete('/crons', {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+        data: ids,
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async enableTask(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/crons/enable',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/crons/enable', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async disableTask(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/crons/disable',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/crons/disable', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async runTask(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/crons/run',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/crons/run', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async stopTask(ids: string[]): Promise<void> {
     try {
-      await this.api.put(
-        '/crons/stop',
-        ids,
-        {
-          headers: this.getHeaders(),
-          params: { t: Date.now() },
-        }
-      );
+      await this.api.put('/crons/stop', ids, {
+        headers: this.getHeaders(),
+        params: { t: Date.now() },
+      });
     } catch (error) {
       throw new Error(`: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 
+   *
    */
   async getSystemInfo(): Promise<any> {
     try {
@@ -458,7 +420,7 @@ export class QLAPI {
   }
 
   /**
-   * 
+   *
    */
   async getEnvStatus(id: string): Promise<number> {
     try {
