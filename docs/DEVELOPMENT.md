@@ -22,7 +22,8 @@ autopilot/
 │   │   ├── ql.ts           # 青龙API封装
 │   │   └── sendNotify.js   # 统一通知模块
 │   ├── js/                 # JavaScript脚本
-│   ├── py/                 # Python脚本
+│   ├── python/             # Python脚本
+│   ├── shell/              # Shell脚本
 │   ├── ts/                 # TypeScript脚本
 │   └── storage/            # 持久化存储
 ├── configs/                # 配置文件

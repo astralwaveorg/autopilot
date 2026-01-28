@@ -1,29 +1,31 @@
 /**
- * AutoPilot
- *
+ * AutoPilot - 青龙面板通用环境类
  * @author Astral
- * @version 1.0.0
+ * @version 1.1.0
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import moment from 'moment';
 import * as fs from 'fs';
 import * as path from 'path';
 
 export interface EnvOptions {
   sep?: string[];
+  // 0: 不通知, 1: 仅错误通知, 2: 总是通知
   notifyType?: number;
   logLevel?: 'debug' | 'info' | 'warn' | 'error';
 }
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export class Env {
   public index = 0;
   public req: AxiosInstance;
   public hasError = false;
-  public msgs: string[] = [];
-  public logs: string[] = [];
-  public startTime: number;
-  public options: EnvOptions;
+  private msgs: string[] = [];
+  private logs: string[] = [];
+  private startTime: number;
+  public options: Required<EnvOptions>;
 
   constructor(
     public name: string,
@@ -31,288 +33,191 @@ export class Env {
   ) {
     this.startTime = Date.now();
     this.options = {
-      sep: ['&', '\n', '@'],
-      notifyType: Number(process.env.NOTIFY_TYPE) || 1,
-      logLevel: (process.env.LOG_LEVEL as any) || 'info',
-      ...options,
+      sep: options.sep || ['&', '\n', '@'],
+      notifyType: options.notifyType ?? (Number(process.env.NOTIFY_TYPE) || 1),
+      logLevel: options.logLevel || (process.env.LOG_LEVEL as LogLevel) || 'info',
     };
 
     this.req = axios.create({
       timeout: Number(process.env.REQUEST_TIMEOUT) * 1000 || 30000,
       headers: {
-        'User-Agent': process.env.USER_AGENT || 'AutoPilot/1.0',
+        'User-Agent': process.env.USER_AGENT || 'AutoPilot/1.1',
       },
     });
 
+    this.initProxy();
+    this.log(`🚀 开始执行: ${this.name}`, 'info');
+  }
+
+  private initProxy(): void {
     if (process.env.HTTP_PROXY || process.env.HTTPS_PROXY) {
       this.req.defaults.proxy = {
         host: process.env.HTTP_PROXY_HOST || '127.0.0.1',
         port: Number(process.env.HTTP_PROXY_PORT) || 7890,
       };
     }
-
-    this.log(` ${this.name} `, 'info');
   }
 
   /**
-   *
+   * 初始化脚本入口
+   * @param TaskClass 任务类，需实现 start 方法
+   * @param envName 环境变量名
    */
-  async init(TaskClass: any, envName: string): Promise<void> {
+  async init<T extends { start: () => Promise<void> }>(
+    TaskClass: new (config: string, index: number) => T,
+    envName: string
+  ): Promise<void> {
     try {
       const envValue = process.env[envName];
 
       if (!envValue) {
-        this.log(`   ${envName}`, 'warn');
-        this.msgs.push(`   ${envName}`);
+        this.log(`未找到环境变量: ${envName}`, 'warn');
         await this.done();
         return;
       }
 
-      const users = this.parse(envValue, this.options.sep!);
+      const users = this.parse(envValue, this.options.sep);
+      const userKeys = Object.keys(users);
 
-      if (users.length === 0) {
-        this.log(`   ${envName} `, 'warn');
-        this.msgs.push(`   ${envName} `);
+      if (userKeys.length === 0) {
+        this.log(`环境变量 ${envName} 格式解析后为空`, 'warn');
         await this.done();
         return;
       }
 
-      this.log(`  ${users.length} `, 'info');
+      this.log(`发现 ${userKeys.length} 个账号`, 'info');
 
-      for (const [idx, userConfig] of Object.entries(users)) {
-        this.index = Number(idx);
-        const task = new TaskClass(userConfig, this.index);
-        await task.start();
+      for (const idxStr of userKeys) {
+        this.index = Number(idxStr);
+        const task = new TaskClass(users[this.index], this.index);
+        await task.start().catch((err) => {
+          this.log(`账号 [${this.index + 1}] 执行异常: ${err.message}`, 'error');
+        });
       }
 
       await this.done();
     } catch (error) {
-      this.log(` : ${(error as Error).message}`, 'error');
-      this.hasError = true;
+      this.log(`程序运行崩溃: ${(error as Error).message}`, 'error');
       await this.done();
     }
   }
 
-  /**
-   *
-   */
-  private parse(envValue: string, seps: string[]): Record<string, string> {
-    let sep = seps[0];
-
-    for (const s of seps) {
-      if (envValue.includes(s)) {
-        sep = s;
-        break;
-      }
-    }
-
-    const users: Record<string, string> = {};
-    const parts = envValue.split(sep);
-
-    parts.forEach((part, idx) => {
-      if (part.trim()) {
-        users[idx] = part.trim();
-      }
-    });
-
-    return users;
+  private parse(envValue: string, seps: string[]): Record<number, string> {
+    const sep = seps.find((s) => envValue.includes(s)) || seps[0];
+    return envValue
+      .split(sep)
+      .map((v) => v.trim())
+      .filter(Boolean)
+      .reduce((acc, curr, idx) => ({ ...acc, [idx]: curr }), {});
   }
 
-  /**
-   *
-   */
-  log(msg: string, level: 'debug' | 'info' | 'warn' | 'error' = 'info'): void {
-    const timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
-    const logMsg = `[${timestamp}] [${level.toUpperCase()}] ${msg}`;
+  log(msg: string, level: LogLevel = 'info'): void {
+    const timestamp = moment().format('HH:mm:ss');
+    const logMsg = `[${timestamp}][${level.toUpperCase()}] ${msg}`;
 
     if (this.shouldLog(level)) {
-      switch (level) {
-        case 'debug':
-          console.log(`\x1b[36m${logMsg}\x1b[0m`);
-          break;
-        case 'info':
-          console.log(`\x1b[32m${logMsg}\x1b[0m`);
-          break;
-        case 'warn':
-          console.log(`\x1b[33m${logMsg}\x1b[0m`);
-          break;
-        case 'error':
-          console.log(`\x1b[31m${logMsg}\x1b[0m`);
-          break;
-      }
+      const colors = {
+        debug: '\x1b[36m', // Cyan
+        info: '\x1b[32m', // Green
+        warn: '\x1b[33m', // Yellow
+        error: '\x1b[31m', // Red
+      };
+      console.log(`${colors[level]}${logMsg}\x1b[0m`);
     }
 
     this.logs.push(logMsg);
-
-    if (level === 'error') {
-      this.hasError = true;
-    }
-
-    if (level !== 'debug') {
-      this.msgs.push(msg);
-    }
+    if (level === 'error') this.hasError = true;
+    if (level !== 'debug') this.msgs.push(msg);
   }
 
-  /**
-   *
-   */
-  private shouldLog(level: string): boolean {
-    const levels = ['debug', 'info', 'warn', 'error'];
-    const currentLevel = levels.indexOf(this.options.logLevel!);
-    const msgLevel = levels.indexOf(level);
-    return msgLevel >= currentLevel;
+  private shouldLog(level: LogLevel): boolean {
+    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
+    return levels.indexOf(level) >= levels.indexOf(this.options.logLevel);
   }
 
-  /**
-   * HTTP
-   */
   async request<T = any>(config: AxiosRequestConfig): Promise<T> {
     try {
       const response: AxiosResponse<T> = await this.req.request(config);
       return response.data;
     } catch (error) {
-      this.log(` : ${(error as Error).message}`, 'error');
+      const err = error as AxiosError;
+      const msg = err.response
+        ? `HTTP ${err.response.status} - ${JSON.stringify(err.response.data)}`
+        : err.message;
+      this.log(`网络请求失败: ${msg}`, 'error');
       throw error;
     }
   }
 
-  /**
-   * GET
-   */
-  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async get<T = any>(url: string, config?: AxiosRequestConfig) {
     return this.request<T>({ ...config, method: 'GET', url });
   }
-
-  /**
-   * POST
-   */
-  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
     return this.request<T>({ ...config, method: 'POST', url, data });
   }
 
   /**
-   * PUT
-   */
-  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'PUT', url, data });
-  }
-
-  /**
-   * DELETE
-   */
-  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.request<T>({ ...config, method: 'DELETE', url });
-  }
-
-  /**
-   *
+   * 持久化存储
    */
   getStorage(name: string) {
     const storageDir = path.join(__dirname, '../storage');
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
-    }
+    if (!fs.existsSync(storageDir)) fs.mkdirSync(storageDir, { recursive: true });
     const storageFile = path.join(storageDir, `${name}.json`);
 
+    const read = (): Record<string, any> => {
+      if (!fs.existsSync(storageFile)) return {};
+      try {
+        return JSON.parse(fs.readFileSync(storageFile, 'utf-8'));
+      } catch {
+        return {};
+      }
+    };
+
     return {
-      getItem: async (key: string): Promise<any> => {
-        try {
-          if (fs.existsSync(storageFile)) {
-            const data = JSON.parse(fs.readFileSync(storageFile, 'utf-8'));
-            return data[key];
-          }
-          return null;
-        } catch (error) {
-          this.log(` : ${(error as Error).message}`, 'error');
-          return null;
-        }
-      },
+      getItem: async (key: string): Promise<any> => read()[key] || null,
       setItem: async (key: string, value: any): Promise<void> => {
-        try {
-          let data = {};
-          if (fs.existsSync(storageFile)) {
-            data = JSON.parse(fs.readFileSync(storageFile, 'utf-8'));
-          }
-          data[key] = value;
-          fs.writeFileSync(storageFile, JSON.stringify(data, null, 2));
-        } catch (error) {
-          this.log(` : ${(error as Error).message}`, 'error');
-        }
+        const data = read();
+        data[key] = value;
+        fs.writeFileSync(storageFile, JSON.stringify(data, null, 2));
       },
       removeItem: async (key: string): Promise<void> => {
-        try {
-          if (fs.existsSync(storageFile)) {
-            const data = JSON.parse(fs.readFileSync(storageFile, 'utf-8'));
-            delete data[key];
-            fs.writeFileSync(storageFile, JSON.stringify(data, null, 2));
-          }
-        } catch (error) {
-          this.log(` : ${(error as Error).message}`, 'error');
-        }
+        const data = read();
+        delete data[key];
+        fs.writeFileSync(storageFile, JSON.stringify(data, null, 2));
       },
     };
   }
 
-  /**
-   *
-   */
   async done(): Promise<void> {
-    const endTime = Date.now();
-    const duration = ((endTime - this.startTime) / 1000).toFixed(2);
+    const duration = ((Date.now() - this.startTime) / 1000).toFixed(2);
+    this.log(`🏁 任务结束: ${this.name} (耗时 ${duration}s)`, 'info');
 
-    this.log(` ${this.name}  ${duration} `, 'info');
+    if (this.shouldNotify()) await this.sendNotify();
 
-    if (this.shouldNotify()) {
-      await this.sendNotify();
-    }
-
-    console.log('\n' + '='.repeat(50));
-    console.log(` `);
-    console.log('='.repeat(50));
-    console.log(` : ${this.msgs.filter((m) => !m.includes('') && !m.includes('')).length}`);
-    console.log(` : ${this.msgs.filter((m) => m.includes('')).length}`);
-    console.log(`  : ${this.msgs.filter((m) => m.includes('')).length}`);
-    console.log('='.repeat(50));
+    console.log(`\n${'='.repeat(40)}`);
+    console.log(`执行统计: ${this.name}`);
+    console.log(`状态: ${this.hasError ? '❌ 存在异常' : '✅ 顺利完成'}`);
+    console.log(`耗时: ${duration} 秒`);
+    console.log(`${'='.repeat(40)}\n`);
   }
 
-  /**
-   *
-   */
   private shouldNotify(): boolean {
     const { notifyType } = this.options;
-
-    if (notifyType === 0) {
-      return false;
-    } else if (notifyType === 1) {
-      return this.hasError;
-    } else {
-      return true;
-    }
+    return notifyType === 2 || (notifyType === 1 && this.hasError);
   }
 
-  /**
-   *
-   */
   private async sendNotify(): Promise<void> {
+    const notifyPath = path.join(__dirname, 'sendNotify.js');
+    if (!fs.existsSync(notifyPath)) return;
+
     try {
-      const notifyPath = path.join(__dirname, 'sendNotify.js');
-
-      if (!fs.existsSync(notifyPath)) {
-        this.log('  ', 'warn');
-        return;
-      }
-
       const sendNotify = require(notifyPath);
-      const title = `${this.name}`;
+      const title = `[${this.hasError ? '异常' : '成功'}] ${this.name}`;
       const content = this.msgs.join('\n');
-
-      if (typeof sendNotify === 'function') {
-        await sendNotify(title, content);
-      } else if (sendNotify.sendNotify && typeof sendNotify.sendNotify === 'function') {
-        await sendNotify.sendNotify(title, content);
-      }
+      const func = sendNotify.sendNotify || sendNotify;
+      if (typeof func === 'function') await func(title, content);
     } catch (error) {
-      this.log(` : ${(error as Error).message}`, 'error');
+      this.log(`推送通知失败: ${(error as Error).message}`, 'error');
     }
   }
 

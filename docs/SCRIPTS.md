@@ -139,6 +139,10 @@ AutoPilot 项目包含 102 个自动化脚本，按编程语言分类：
 - `alipan_clean.ts` - 阿里云盘清理
 - `disable_duplicate.ts` - 禁用青龙重复脚本
 
+### 4. Shell 脚本 (0 个)
+
+Shell脚本目录已创建，暂无脚本。
+
 ## 脚本使用说明
 
 ### 环境变量配置

@@ -1,95 +1,120 @@
 """
-恩山签到脚本
-
+恩山无线论坛签到
+cron: 0 9 * * *
+变量名: ENSHAN_COOKIE (格式: cookie，多账号使用 @ 或 & 或 换行 分割)
 @Author: Astral
-@Date: 2025-01-28
-@Version: 1.0.0
-
-环境变量:
-   ENSHAN_COOKIE: 恩山Cookie，多个账号用 &、\n 或 @ 分隔
-
-参考文档: https://www.enshan.com/
+@Date: 2026-01-28
 """
 
 import os
+import re
+import sys
+import time
+import random
 import requests
-from typing import Optional
+import urllib3
+
+# 禁用安全请求警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class Enshan:
-    """恩山签到类"""
-
-    def __init__(self, cookie: str, index: int):
-        self.cookie = cookie.strip()
-        self.index = index
-        self.nickname = ''
-
-    def sign_in(self) -> bool:
-        """执行签到"""
+def load_send():
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    sys.path.append(cur_path)
+    if os.path.exists(os.path.join(cur_path, "notify.py")):
         try:
-            response = requests.get(
-                'https://www.enshan.com/api/user/sign',
-                headers={
-                    'Cookie': self.cookie,
-                    'Content-Type': 'application/json'
-                }
-            )
+            from notify import send
 
-            res = response.json()
+            return send
+        except ImportError:
+            return None
+    return None
 
-            if res.get('code') == 0 and res.get('data'):
-                self.nickname = res['data'].get('nickname', f'账号{self.index + 1}')
-                reward = res['data'].get('reward')
 
-                if reward:
-                    print(f'账号 {self.index + 1} [{self.nickname}] 签到成功')
-                    print(f'   奖励: {reward.get("name")} {reward.get("desc")}')
-                else:
-                    print(f'账号 {self.index + 1} [{self.nickname}] 签到成功，无奖励')
+class EnShan:
+    def __init__(self, cookie):
+        self.cookie = cookie
+        self.msg = ""
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.125 Safari/537.36",
+            "Cookie": self.cookie,
+            "Referer": "https://www.right.com.cn/FORUM/forum.php",
+        }
 
-                return True
+    def get_info(self):
+        url = (
+            "https://www.right.com.cn/FORUM/home.php?mod=spacecp&ac=credit&showcredit=1"
+        )
+        try:
+            response = requests.get(url, headers=self.headers, verify=False, timeout=15)
+            text = response.text
+
+            if "恩山币" in text:
+                coin = re.findall(r"恩山币: </em>(.*?)&nbsp;", text)
+                point = re.findall(r"<em>积分: </em>(.*?)<span", text)
+                user_name = re.findall(r'title="访问我的空间">(.*?)</a>', text)
+
+                name = user_name[0] if user_name else "未知用户"
+                c_val = coin[0] if coin else "获取失败"
+                p_val = point[0] if point else "获取失败"
+
+                print(f"[INFO] 账号: {name} | 恩山币: {c_val} | 积分: {p_val}")
+                self.msg += f"账号: {name}\n恩山币: {c_val}\n积分: {p_val}\n"
+            elif "请先登录" in text:
+                print("[WARN] Cookie 已失效或错误")
+                self.msg += "状态: Cookie 失效\n"
             else:
-                print(f'账号 {self.index + 1} 签到失败: {res.get("message", "未知错误")}')
-                return False
+                print("[ERROR] 页面解析失败")
+                self.msg += "状态: 解析异常\n"
+        except Exception as e:
+            print(f"[ERROR] 请求异常: {str(e)}")
+            self.msg += f"异常: {str(e)}\n"
 
-        except Exception as error:
-            print(f'账号 {self.index + 1} 签到异常: {str(error)}')
-            return False
-
-    def start(self) -> None:
-        """启动签到"""
-        print(f'\n========== 账号 {self.index + 1} ==========')
-
-        if not self.cookie:
-            print('Cookie为空')
-            return
-
-        self.sign_in()
+    def run(self):
+        self.get_info()
+        return self.msg
 
 
 def main():
-    """主函数"""
-    env_value = os.getenv('ENSHAN_COOKIE', '')
-
-    if not env_value:
-        print('未找到环境变量 ENSHAN_COOKIE')
+    var_name = "ENSHAN_COOKIE"
+    env_str = os.getenv(var_name)
+    if not env_str:
+        print(f"[ERROR] 未找到环境变量 {var_name}")
         return
 
-    # 解析多个账号
-    users = []
-    for sep in ['@', '\n', '&']:
-        if sep in env_value:
-            users = [u.strip() for u in env_value.split(sep) if u.strip()]
-            break
+    # 解析多账号
+    if "@" in env_str:
+        accounts = env_str.split("@")
+    elif "&" in env_str:
+        accounts = env_str.split("&")
+    elif "\n" in env_str:
+        accounts = env_str.split("\n")
+    else:
+        accounts = [env_str]
 
-    if not users:
-        users = [env_value.strip()] if env_value.strip() else []
+    final_msg_list = []
+    print(f"[INFO] 检测到 {len(accounts)} 个账号")
 
-    # 执行签到
-    for idx, user_config in enumerate(users):
-        task = Enshan(user_config, idx)
-        task.start()
+    for idx, ck in enumerate(accounts):
+        if not ck.strip():
+            continue
+        print(f"\n[INFO] ---------- 开始第 {idx+1} 个账号 ----------")
+        worker = EnShan(ck.strip())
+        res = worker.run()
+        final_msg_list.append(res)
+        if idx < len(accounts) - 1:
+            time.sleep(random.randint(2, 5))
+
+    # 汇总通知
+    final_report = "【恩山无线论坛任务报告】\n\n" + "\n".join(final_msg_list)
+    print("\n[INFO] 所有账号任务执行完毕")
+
+    send = load_send()
+    if send:
+        send("恩山论坛签到", final_report)
+    else:
+        print("[INFO] 未配置通知服务，仅控制台输出")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
