@@ -17,7 +17,7 @@ https://mcs-mimp-web.sf-express.com/mcs-mimp/share/app/shareRedirect
 
 
 cron: 11 6,9,12,15,18 * * *
-const $ = new Env("");
+const $ = new Env('SFSY签到', { sep: ['@', '\n', '&'] });
 */
 //Sat Jan 25 2025 09:20:09 GMT+0000 (Coordinated Universal Time)
 //Base:https://github.com/echo094/decode-js

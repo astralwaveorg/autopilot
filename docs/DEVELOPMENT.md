@@ -21,40 +21,10 @@ autopilot/
 │   │   ├── common.ts       # 通用工具函数
 │   │   ├── ql.ts           # 青龙API封装
 │   │   └── sendNotify.js   # 统一通知模块
-│   ├── checkin/            # 签到类脚本（通用签到）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── info/               # 信息类脚本（新闻、天气等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── tools/              # 工具类脚本（清理、安装等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── shopping/           # 购物类脚本（美团、超市等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── car/                # 汽车类脚本（车企签到等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── life/               # 生活类脚本（医疗、黄历等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── finance/            # 金融类脚本（银行、支付等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── media/              # 媒体类脚本（视频、阅读、游戏等）
-│   │   ├── js/
-│   │   ├── py/
-│   │   └── ts/
-│   ├── storage/            # 持久化存储
-│   └── templates/          # 脚本模板
+│   ├── js/                 # JavaScript脚本
+│   ├── py/                 # Python脚本
+│   ├── ts/                 # TypeScript脚本
+│   └── storage/            # 持久化存储
 ├── configs/                # 配置文件
 │   ├── env.example         # 环境变量示例
 │   └── crontab.example     # 定时任务示例

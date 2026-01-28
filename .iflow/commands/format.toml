@@ -1,0 +1,11 @@
+# Command: format
+# Description: Auto-detect and apply project formatter
+# Category: development
+# Version: 1
+# Author: 10169
+
+description = "Auto-detect and apply project formatter"
+
+prompt = """
+I'll auto-detect your project's formatting configuration and apply consistent formatting to your code. I'll identify existing formatters (Prettier, Black, Clang-Format, etc.), respect project configurations, and apply formatting without breaking functionality. Integration with development workflow includes automatic suggestions after major changes and pre-commit formatting. I'll preserve code comments and documentation while ensuring consistent style.
+"""

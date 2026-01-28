@@ -12,7 +12,7 @@
 import { Env } from '../../utils';
 import { QLAPI } from '../../utils/ql';
 
-const $ = new Env('');
+const $ = new Env('禁用重复脚本', { sep: ['@', '\n', '&'] });
 
 interface TaskItem {
   id: number;

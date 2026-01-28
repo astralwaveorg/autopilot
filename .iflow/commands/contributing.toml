@@ -1,0 +1,11 @@
+# Command: contributing
+# Description: Complete contribution readiness analysis for your project
+# Category: documentation
+# Version: 1
+# Author: 10169
+
+description = "Complete contribution readiness analysis for your project"
+
+prompt = """
+I'll help make your project contribution-ready by analyzing your codebase for contribution readiness. I'll create comprehensive contributor documentation, identify good first issues, standardize code patterns, and ensure onboarding clarity. Analysis includes project structure patterns, documentation completeness, contribution barriers, code complexity mapping, testing approach, and onboarding flow assessment.
+"""

@@ -2,65 +2,91 @@
 
 ## 脚本分类
 
-AutoPilot 项目包含 110 个自动化脚本，按功能分为以下 8 大类：
+AutoPilot 项目包含 102 个自动化脚本，按编程语言分类：
 
-### 1. 签到类 (checkin) - 84 个脚本
+### 1. JavaScript 脚本 (61 个)
 
-各类 APP、小程序、网站的自动签到脚本。
-
-#### JavaScript (55 个)
+#### 签到类脚本 (50+ 个)
 - `aliyun_drive.js` - 阿里云盘签到
 - `qibida.js` - Q必达签到
 - `meishu.js` - 美数签到
-- `bhxcy.js` - BHXCY签到
-- `wnn.js` - WNN签到
-- `sfsy.js` - SFSY签到
-- `dt.js` - DT签到
-- `liyingyunjie.js` - 利赢云杰签到
-- `xipigou.js` - 西皮狗签到
+- `fsdlb.js` - 飞速登录签到
+- `qbd.js` - QBD签到
+- `mxbc.js` - 美币城签到
+- `fenxiang.js` - 分享签到
+- `yinxiang.js` - 印象签到
+- `htx.js` - 火币签到
+- `dw.js` - 达维签到
+- `hyjk.js` - 健康卡签到
+- `ftej.js` - 飞特签到
+- `hl.js` - HL签到
+- `dfyc.js` - 东方云彩签到
+- `qtx.js` - 青天行签到
+- `nhsy.js` - 农商银行签到
+- `xinxi.js` - 信息签到
+- `maisiweier.js` - 麦斯韦尔签到
+- `gjzp.js` - 国际招聘签到
+- `lenovoapp.js` - 联想签到
+- `sytt.js` - 商通通签到
+- `dffx.js` - 东方飞讯签到
+- `gqftbz.js` - 共青体签到
+- `xqz.js` - 小智签到
+- `jlzx.js` - 金龙智选签到
+- `musi.js` - 慕思签到
+- `hfzj.js` - 杭州智驾签到
+- `ddsy_songyao.js` - 叮当送药签到
+- `didi.js` - 滴滴签到
+- `shangzhanwangluo.js` - 商展网络签到
+- `mtf.js` - 满分图签到
+- `quzanmi.js` - 去赞米签到
+- `jlqc.js` - 金龙汽车签到
+- `haitianmeiweiguan.js` - 海天美味馆签到
+- `dianxin.js` - 电信签到
+- `yuebai.js` - 月白签到
+- `baitianGame.js` - 百天游戏签到
+- `bucket.js` - 桶签到
+- `ksjsb.js` - 快捷记账签到
+- `yingsheng_v2.js` - 影声签到
+- `jingcaizhaopin.js` - 精彩招聘签到
+- `piaopiaochaoshi.js` - 飘飘超市签到
+- `huangli.js` - 黄历签到
+- `shangzhan_wangluo.js` - 商战网络签到
+- `sysxc.js` - 实现签到
+- `gqaa.js` - 共青爱签到
+- `ljfsjlb.js` - 龙江健身签到
+- `yyq.js` - 网络签到
+- `zhiwuxingqiu.js` - 植物星球签到
+- `hqcsh.js` - 华清生活签到
 - `xiaosatonglu.js` - 小沙通路签到
 - `shangshaban.js` - 上上班签到
 - `libai_vip.js` - 立白VIP签到
-- `hqcsh.js` - 华清生活签到
-- `zhiwuxingqiu.js` - 植物星球签到
-- `yyq.js` - YYQ签到
-- `ljfsjlb.js` - 龙江健身签到
-- `gqaa.js` - GQAA签到
-- `sysxc.js` - 实现签到
-- `shangzhan_wangluo.js` - 商展网络签到
-- `jingcaizhaopin.js` - 精彩招聘签到
-- `ksjsb.js` - 快捷记账签到
-- `yuebai.js` - 月白签到
-- `jlqc.js` - 金龙汽车签到
-- `haitianmeiweiguan.js` - 海天美味馆签到
-- `quzanmi.js` - 去赞米签到
-- `mtf.js` - MTF签到
-- `shangzhanwangluo.js` - 商展网络签到
-- `didi.js` - 滴滴签到
-- `hfzj.js` - 杭州智驾签到
-- `musi.js` - 慕思签到
-- `jlzx.js` - 金龙智选签到
-- `xqz.js` - 小智签到
-- `gqftbz.js` - 共青体签到
 - `chaoxinwen.js` - 潮新闻签到
-- `dffx.js` - 东方飞讯签到
-- `sytt.js` - 商通通签到
-- `lenovoapp.js` - 联想签到
-- `gjzp.js` - 国际招聘签到
-- `maisiweier.js` - 麦斯韦尔签到
-- `xinxi.js` - 信息签到
-- `qtx.js` - QTX签到
-- `dfyc.js` - 东方云彩签到
-- `hl.js` - HL签到
-- `ftej.js` - 飞特签到
-- `dw.js` - 达维签到
-- `htx.js` - 火币签到
-- `yinxiang.js` - 印象签到
-- `fenxiang.js` - 分享签到
-- `qbd.js` - QBD签到
-- `fsdlb.js` - 飞速登录签到
+- `dt.js` - DT签到
 
-#### Python (11 个)
+#### 工具类脚本 (8 个)
+- `modify_notify.js` - 修改通知配置
+- `migrate_scripts.js` - 脚本批量迁移工具
+- `notify_interceptor.js` - 青龙通知拦截
+- `refactor_scripts.js` - 脚本批量重构工具
+- `clean_emoji.py` - 清理emoji符号
+
+#### 购物类脚本 (3 个)
+- `meituan.js` - 美团签到
+
+#### 生活类脚本 (4 个)
+- `hyjk.js` - 健康卡签到
+- `ddsy_songyao.js` - 叮当送药签到
+- `huangli.js` - 黄历查询
+
+#### 金融类脚本 (4 个)
+- `unionpay.js` - 云闪付签到
+- `dianxin.js` - 电信签到
+- `jlyh.js` - 吉林银行签到
+- `nhsy.js` - 农商银行签到
+
+### 2. Python 脚本 (14 个)
+
+#### 签到类脚本 (11 个)
 - `aliyun_drive.py` - 阿里云盘签到
 - `qidianwu_water.py` - 七点五签到
 - `iqiyi.py` - 爱奇艺签到
@@ -73,7 +99,18 @@ AutoPilot 项目包含 110 个自动化脚本，按功能分为以下 8 大类�
 - `7dian5.py` - 七点五签到
 - `maomao_kankan.py` - 猫猫看看签到
 
-#### TypeScript (18 个)
+#### 生活类脚本 (1 个)
+- `dingdang_kuaiyao.py` - 叮当快药签到
+
+#### 媒体类脚本 (1 个)
+- `iqiyi.py` - 爱奇艺签到
+
+#### 工具类脚本 (1 个)
+- `clean_emoji.py` - 清理emoji符号
+
+### 3. TypeScript 脚本 (23 个)
+
+#### 签到类脚本 (18 个)
 - `aliyun_drive.ts` - 阿里云盘签到
 - `meituan.ts` - 美团签到
 - `iqiyi.ts` - 爱奇艺签到
@@ -83,91 +120,24 @@ AutoPilot 项目包含 110 个自动化脚本，按功能分为以下 8 大类�
 - `aima.ts` - 爱码签到
 - `ipzan.ts` - IP赞签到
 - `videoqq.ts` - 腾讯视频签到
-- `ths.ts` - THS签到
+- `ths.ts` - 同花顺签到
 - `aicnn.ts` - AICNN签到
-- `jsbaxfls.ts` - JSBAXFLS签到
-- `imaotai.ts` - 茅台签到
+- `jsbaxfls.ts` - 健步房签到
+- `imaotai.ts` - 茅台预约
 - `yourapi.ts` - YourAPI签到
-- `ssone.ts` - SSOne签到
-- `ikuuu.ts` - ikuuu签到
-- `newapi.ts` - NewAPI签到
+- `ssone.ts` - SSOne机场签到
+- `ikuuu.ts` - ikuuu机场签到
+- `newapi.ts` - NewAPI通用签到
+- `ximalaya.ts` - 喜马拉雅签到
 
-### 2. 信息类 (info) - 4 个脚本
-
-各类信息推送脚本，如天气、新闻等。
-
-#### TypeScript (4 个)
+#### 信息类脚本 (2 个)
 - `daily_news.ts` - 60s 读懂世界早报
 - `weather_report.ts` - 每日天气预报
 
-### 3. 工具类 (tools) - 14 个脚本
-
-系统管理、清理、优化等工具脚本。
-
-#### JavaScript (8 个)
-- `modify_notify.js` - 修改通知配置
-- `migrate_scripts.js` - 脚本批量迁移工具
-- `notify_interceptor.js` - 青龙通知拦截
-- `clean_emoji.py` - 清理emoji符号
-- `refactor_scripts.js` - 脚本批量重构工具
-
-#### TypeScript (5 个)
+#### 工具类脚本 (3 个)
 - `install_whistle.ts` - 安装Whistle代理
 - `alipan_clean.ts` - 阿里云盘清理
 - `disable_duplicate.ts` - 禁用青龙重复脚本
-
-#### Python (1 个)
-- `clean_emoji.py` - 清理emoji符号
-
-### 4. 购物类 (shopping) - 3 个脚本
-
-电商平台相关脚本。
-
-#### JavaScript (3 个)
-- `meituan.js` - 美团签到
-- `piaopiaochaoshi.js` - 飘飘超市签到
-- `mxbc.js` - 美币城签到
-
-### 5. 汽车类 (car) - 0 个脚本
-
-汽车品牌相关脚本（暂无）。
-
-### 6. 生活类 (life) - 5 个脚本
-
-生活服务相关脚本。
-
-#### JavaScript (4 个)
-- `hyjk.js` - 健康卡签到
-- `ddsy_songyao.js` - 叮当送药签到
-- `huangli.js` - 黄历查询
-
-#### Python (1 个)
-- `dingdang_kuaiyao.py` - 叮当快药签到
-
-### 7. 金融类 (finance) - 4 个脚本
-
-银行、支付等金融相关脚本。
-
-#### JavaScript (4 个)
-- `unionpay.js` - 云闪付签到
-- `dianxin.js` - 电信签到
-- `jlyh.js` - 吉林银行签到
-- `nhsy.js` - 农商银行签到
-
-### 8. 媒体类 (media) - 7 个脚本
-
-视频、阅读、游戏等娱乐相关脚本。
-
-#### JavaScript (4 个)
-- `yingsheng_v2.js` - 影声签到
-- `bucket.js` - 桶签到
-- `baitianGame.js` - 百天游戏签到
-
-#### Python (1 个)
-- `iqiyi.py` - 爱奇艺签到
-
-#### TypeScript (2 个)
-- `ximalaya.ts` - 喜马拉雅签到
 
 ## 脚本使用说明
 
@@ -249,13 +219,251 @@ SCRIPT_CONFIG={"key1":"value1","key2":"value2"}
 
 ### 添加新脚本
 1. 阅读开发指南：`docs/DEVELOPMENT.md`
-2. 使用模板文件：`scripts/templates/`
+2. 使用标准模板结构
 3. 遵循代码规范
 4. 添加环境变量说明
 5. 测试验证
 
 ### 脚本模板
-参考 `scripts/templates/` 目录下的模板文件。
+
+#### JavaScript 模板
+```javascript
+/*
+ * @Author: Astral
+ * @Date: 2025-01-28
+ * @Description: 脚本功能描述
+ * @cron: 30 7 * * *
+ * @new Env('脚本名称')
+ * @环境变量: ENV_VAR_NAME 变量说明
+ */
+
+const { Env } = require('./utils/Env.js');
+
+const $ = new Env('脚本名称', { sep: ['@', '\n', '&'] });
+
+class Task {
+  constructor(config, index) {
+    this.config = config;
+    this.index = index;
+  }
+
+  async start() {
+    try {
+      $.log(`\n========== 账号 ${this.index + 1} ==========`, 'info');
+
+      // 业务逻辑
+      await this.main();
+
+      $.log(`账号 ${this.index + 1} 执行完成`, 'info');
+    } catch (error) {
+      $.log(`账号 ${this.index + 1} 执行失败: ${error.message}`, 'error');
+    }
+  }
+
+  async main() {
+    // 实现业务逻辑
+  }
+}
+
+$.init(Task, 'ENV_VAR_NAME')
+  .catch(error => {
+    $.log(`程序执行失败: ${error.message}`, 'error');
+  })
+  .finally(() => {
+    $.done();
+  });
+```
+
+#### Python 模板
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+脚本功能描述
+@Author: Astral
+@Date: 2025-01-28
+@cron: 30 7 * * *
+@环境变量: ENV_VAR_NAME 变量说明
+"""
+
+import os
+import sys
+import requests
+from typing import Dict, Any
+
+class Task:
+    def __init__(self, config: str, index: int):
+        self.config = config.strip()
+        self.index = index
+
+    async def start(self) -> None:
+        """主入口"""
+        try:
+            print(f"\n========== 账号 {self.index + 1} ==========")
+
+            # 业务逻辑
+            await self.main()
+
+            print(f"账号 {self.index + 1} 执行完成")
+        except Exception as e:
+            print(f"账号 {self.index + 1} 执行失败: {str(e)}")
+
+    async def main(self) -> None:
+        """主逻辑"""
+        # 1. 获取用户信息
+        await self.get_user_info()
+
+        # 2. 执行签到
+        await self.sign_in()
+
+        # 3. 领取奖励
+        await self.get_reward()
+
+    async def get_user_info(self) -> None:
+        """获取用户信息"""
+        try:
+            print("获取用户信息...")
+
+            response = requests.get(
+                'https://api.example.com/user/info',
+                headers={
+                    'Authorization': f'Bearer {self.config}',
+                    'User-Agent': 'AutoPilot/1.0'
+                },
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                print(f"用户: {data['data']['username']}")
+            else:
+                print(f"获取用户信息失败: {data.get('message')}")
+        except Exception as e:
+            print(f"获取用户信息异常: {str(e)}")
+
+    async def sign_in(self) -> None:
+        """签到"""
+        try:
+            print("开始签到...")
+
+            response = requests.post(
+                'https://api.example.com/user/signin',
+                headers={
+                    'Authorization': f'Bearer {self.config}',
+                    'User-Agent': 'AutoPilot/1.0'
+                },
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                print(f"签到成功，获得 {data['data']['points']} 积分")
+            elif response.status_code == 400 and '已签到' in data.get('message', ''):
+                print("今日已签到")
+            else:
+                print(f"签到失败: {data.get('message')}")
+        except Exception as e:
+            print(f"签到异常: {str(e)}")
+
+    async def get_reward(self) -> None:
+        """领取奖励"""
+        try:
+            print("领取奖励...")
+
+            response = requests.post(
+                'https://api.example.com/user/reward',
+                headers={
+                    'Authorization': f'Bearer {self.config}',
+                    'User-Agent': 'AutoPilot/1.0'
+                },
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                print(f"领取奖励成功: {data['data']['name']}")
+            elif response.status_code == 400 and '已领取' in data.get('message', ''):
+                print("奖励已领取")
+            else:
+                print(f"领取奖励失败: {data.get('message')}")
+        except Exception as e:
+            print(f"领取奖励异常: {str(e)}")
+
+async def main():
+    """主函数"""
+    env_value = os.getenv('ENV_VAR_NAME')
+
+    if not env_value:
+        print("未找到环境变量 ENV_VAR_NAME")
+        return
+
+    # 解析多账号
+    users = env_value.split('&')
+
+    for idx, user_config in enumerate(users):
+        if user_config.strip():
+            task = Task(user_config, idx)
+            await task.start()
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())
+```
+
+#### TypeScript 模板
+```typescript
+/*
+ * @Author: Astral
+ * @Date: 2025-01-28
+ * @Description: 脚本功能描述
+ * @cron: 30 7 * * *
+ * @new Env('脚本名称')
+ * @环境变量: ENV_VAR_NAME 变量说明
+ */
+
+import { Env } from '../utils';
+
+const $ = new Env('脚本名称', { sep: ['@', '\n', '&'] });
+
+class Task {
+  constructor(private config: string, private index: number) {}
+
+  async start(): Promise<void> {
+    try {
+      $.log(`\n========== 账号 ${this.index + 1} ==========`, 'info');
+
+      // 业务逻辑
+      await this.main();
+
+      $.log(`账号 ${this.index + 1} 执行完成`, 'info');
+    } catch (error) {
+      $.log(`账号 ${this.index + 1} 执行失败: ${(error as Error).message}`, 'error');
+    }
+  }
+
+  private async main(): Promise<void> {
+    // 实现业务逻辑
+  }
+}
+
+$.init(Task, 'ENV_VAR_NAME')
+  .catch(error => {
+    $.log(`程序执行失败: ${(error as Error).message}`, 'error');
+  })
+  .finally(() => {
+    $.done();
+  });
+```
+
+## 脚本命名规范
+
+所有脚本按功能命名，通过文件名体现其用途：
+
+- 签到类：`xxx_signin.js` 或 `xxx.js`
+- 信息类：`xxx_news.js` 或 `xxx_report.js`
+- 工具类：`xxx_clean.js` 或 `xxx_tool.js`
+- 媒体类：`xxx_video.js` 或 `xxx_media.js`
 
 ## 更多信息
 
